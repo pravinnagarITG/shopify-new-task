@@ -189,6 +189,18 @@ slider-component.slider-component-full-width {
     width: calc((100% - var(--desktop-margin-left-first-item)) / 4 - var(--grid-desktop-horizontal-spacing) * 3);
   }
 
+  .featured_collection .slider--desktop.grid--4-col-desktop .grid__item {
+    width: calc(25% - var(--grid-desktop-horizontal-spacing) * 3 / 4);
+    max-width: calc(25% - var(--grid-desktop-horizontal-spacing) * 3 / 4);
+ }
+ .featured_collection .slider--desktop .slider__slide:first-child {
+    margin-left: 0;
+    scroll-margin-left: var(--desktop-margin-left-first-item);
+}
+ .featured_collection  .slider--desktop:after{
+  padding-left:0;
+}
+
   .slider--desktop.grid--3-col-desktop .grid__item {
     width: calc((100% - var(--desktop-margin-left-first-item)) / 3 - var(--grid-desktop-horizontal-spacing) * 4);
   }
