@@ -735,6 +735,7 @@ class SliderComponent extends HTMLElement {
     this.pageTotalElement = this.querySelector('.slider-counter--total');
     this.prevButton = this.querySelector('button[name="previous"]');
     this.nextButton = this.querySelector('button[name="next"]');
+    this.progressBar = this.querySelector('.swiper-pagination-progressbar-fill');
 
     if (!this.slider || !this.nextButton) return;
 
@@ -775,6 +776,28 @@ class SliderComponent extends HTMLElement {
       this.currentPageElement.textContent = this.currentPage;
       this.pageTotalElement.textContent = this.totalPages;
     }
+
+      if (this.progressBar && this.sliderItemsToShow.length > 0) {
+        const totalSlides = this.sliderItemsToShow.length;
+        const visibleSlides = this.slidesPerPage; // e.g. 4
+
+        const maxScroll = this.slider.scrollWidth - this.slider.clientWidth;
+        const scrollRatio = this.slider.scrollLeft / maxScroll;
+
+        // base fill according to visible slides
+        const baseFill = visibleSlides / totalSlides;
+
+        // extra fill from scroll movement
+        const extraFill = (1 - baseFill) * scrollRatio;
+
+        const progress = baseFill + extraFill;
+
+        this.progressBar.style.transform = `translate3d(0,0,0) scaleX(${progress}) scaleY(1)`;
+      }
+
+
+
+
 
     if (this.currentPage != previousPage) {
       this.dispatchEvent(

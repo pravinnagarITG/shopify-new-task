@@ -53,6 +53,11 @@
     transform-origin: left center;
     transition: transform .3s ease;
 }
+.swiper-pagination-progressbar-fill {
+  transition: transform 0.3s ease;
+  transform-origin: left center;
+}
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -248,7 +253,7 @@
   </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+{% comment %} document.addEventListener('DOMContentLoaded', () => {
   const totalSlidesElement = document.querySelector('.slider-counter--total');
   let currentSlide = 1;
 
@@ -316,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Run init
   initializeSlider();
-});
+}); {% endcomment %}
 </script>
    
 
