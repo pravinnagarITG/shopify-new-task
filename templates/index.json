@@ -235,12 +235,73 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "multicolumn_tqNRLj": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_V8P4gK": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/image-2_4e218c65-4729-44c1-9520-ee9c65134846.png",
+            "title": "Column",
+            "text": "<p>These are not only adorable, but also the best tasting cookies and cupcakes in Lexington. The service is excellent and they are very accommodating. Love the new store location too!</p>",
+            "html": "qwqw",
+            "link_label": "qwqw",
+            "link": ""
+          }
+        },
+        "column_4iCq63": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/image-2_4e218c65-4729-44c1-9520-ee9c65134846.png",
+            "title": "Column",
+            "text": "<p>These are not only adorable, but also the best tasting cookies and cupcakes in Lexington. The service is excellent and they are very accommodating. Love the new store location too!</p>",
+            "html": "qwq",
+            "link_label": "qwqw",
+            "link": ""
+          }
+        },
+        "column_UqNpMN": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>These are not only adorable, but also the best tasting cookies and cupcakes in Lexington. The service is excellent and they are very accommodating. Love the new store location too!</p>",
+            "html": "",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_V8P4gK",
+        "column_4iCq63",
+        "column_UqNpMN"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "Multicolumn",
+        "heading_size": "h1",
+        "subheading": "",
+        "image_width": "third",
+        "image_ratio": "adapt",
+        "columns_desktop": 1,
+        "column_alignment": "center",
+        "background_style": "primary",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
     "image_banner",
     "image_with_text_DDwMXN",
     "custom_image_slide_RabiKQ",
-    "featured_collection_jkdYBN"
+    "featured_collection_jkdYBN",
+    "multicolumn_tqNRLj"
   ]
 }
