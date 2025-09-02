@@ -12,13 +12,20 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-  .image-with-text__text-item{
+  .image-with-text__text-item .has-bg-image {
+    background-image: url("{{ section.settings.container_bg_image | img_url: 'master' }}");
     background-repeat: no-repeat;
     background-size: cover;
   }
+
   .image-with-text__media-item .global-media-settings{
     border:none;
   }
+  @media screen and (max-width: 750px) {
+  .image-with-text__text-item .has-bg-image {
+    background-image: none !important;
+  }
+}
 {%- endstyle -%}
 
 {%- liquid
@@ -69,10 +76,10 @@
             {%- endif -%}
           </div>
         </div>
-        <div class="image-with-text__text-item grid__item" {% if section.settings.container_bg_image != blank %} style="background-image: url('{{ section.settings.container_bg_image | img_url: 'master' }}');" {% endif %}>
+        <div class="image-with-text__text-item grid__item">
           <div
             id="ImageWithText--{{ section.id }}"
-            class="image-with-text__content image-with-text__content--{{ section.settings.desktop_content_position }} image-with-text__content--desktop-{{ section.settings.desktop_content_alignment }} image-with-text__content--mobile-{{ section.settings.mobile_content_alignment }} image-with-text__content--{{ section.settings.height }} content-container{% unless remove_color_classes %}{% if section.settings.container_bg_image == blank %} gradient  color-{{ section.settings.color_scheme }} {% endif %} {% else %} background-transparent{% endunless %}"
+            class="{% if section.settings.container_bg_image != blank %} has-bg-image {% endif %} image-with-text__content image-with-text__content--{{ section.settings.desktop_content_position }} image-with-text__content--desktop-{{ section.settings.desktop_content_alignment }} image-with-text__content--mobile-{{ section.settings.mobile_content_alignment }} image-with-text__content--{{ section.settings.height }} content-container{% unless remove_color_classes %} gradient  color-{{ section.settings.color_scheme }} {% else %} background-transparent{% endunless %}"
           >
             {%- for block in section.blocks -%}
               {% case block.type %}
@@ -91,8 +98,12 @@
                     {{ block.settings.caption | escape }}
                   </p>
                 {%- when 'text' -%}
-                  <div class="image-with-text__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+                  <div class="image-with-text__text desktop_text rte {{ block.settings.text_style }} small-hide" {{ block.shopify_attributes }}>
                     {{ block.settings.text }}
+                  </div>
+                  {%- when 'mobile_text' -%}
+                   <div class="image-with-text__text mobile_text rte {{ block.settings.mobile_text_style }} large-up-hide medium-hide" {{ block.shopify_attributes }}>
+                    {{ block.settings.mobile_text }}
                   </div>
                 {%- when 'button' -%}
                   {%- if block.settings.button_label != blank -%}
@@ -317,12 +328,12 @@
     {
       "type": "image_picker",
       "id": "container_bg_image",
-      "label": "Container Background-image"
+      "label": "Container Background-image Desktop"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "t:sections.multirow.settings.container_color_scheme.label",
+      "label": "Container color scheme Mobile",
       "default": "scheme-1"
     },
     {
@@ -455,6 +466,35 @@
         {
           "type": "select",
           "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__2.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.image-with-text.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+        {
+      "type": "mobile_text",
+      "name": "Mobile Content",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "mobile_text",
+          "default": "t:sections.image-with-text.blocks.text.settings.text.default",
+          "label": "Mobile Text"
+        },
+        {
+          "type": "select",
+          "id": "mobile_text_style",
           "options": [
             {
               "value": "body",

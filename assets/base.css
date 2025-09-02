@@ -431,6 +431,19 @@ table:not([class]) th {
   .small-hide {
     display: none !important;
   }
+  
+}
+
+@media screen and (max-width: 750px) {
+  .image-with-text__text.desktop_text {
+    display: none !important;
+  }
+  .image-with-text .image-with-text__content {
+    padding: 2rem calc(2rem / var(--font-body-scale)) 2rem;
+ }
+ .image-with-text .image-with-text__content>*+* {
+    margin-top: 1rem;
+}
 }
 
 @media screen and (min-width: 750px) and (max-width: 989px) {
