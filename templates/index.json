@@ -9,6 +9,13 @@
  */
 {
   "sections": {
+    "breadcrumb_jVXgng": {
+      "type": "breadcrumb",
+      "name": "breadcrumbs",
+      "settings": {
+        "text_alignment": "start"
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -304,6 +311,7 @@
     }
   },
   "order": [
+    "breadcrumb_jVXgng",
     "image_banner",
     "image_with_text_DDwMXN",
     "custom_image_slide_RabiKQ",

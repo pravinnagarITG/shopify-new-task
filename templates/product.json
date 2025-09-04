@@ -99,9 +99,17 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "breadcrumb_N3g7L7": {
+      "type": "breadcrumb",
+      "name": "breadcrumbs",
+      "settings": {
+        "text_alignment": "start"
+      }
     }
   },
   "order": [
+    "breadcrumb_N3g7L7",
     "main",
     "related-products"
   ]

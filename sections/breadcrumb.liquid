@@ -1,0 +1,193 @@
+{%- unless template == 'index' -%}
+  {%- liquid
+    assign justify = section.settings.text_alignment | default: 'start'
+  -%}
+  <div class="section-breadcrumb page-width">
+    <nav
+      class="breadcrumbs flex items-center justify-start md:justify-{{ justify }}"
+      role="navigation"
+      aria-label="breadcrumbs"
+    >
+      <a href="{{ routes.root_url }}" title="Home" class="reversed-link">Home</a>
+      {%- if template contains 'page' -%}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ page.title }}</span>
+      {%- elsif template contains 'product' -%}
+        {%- liquid
+          assign primary_collection = product.metafields.breadcrumb.primary_collection
+        -%}
+        {%- if collection.url != blank -%}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+          {%- if primary_collection != blank -%}
+            {{ primary_collection.value.title | link_to: primary_collection.value.url }}
+          {%- else -%}
+            {{ collection.title | link_to: collection.url }}
+          {%- endif -%}
+        {%- else -%}
+          {% assign current_collection = product.collections | first %}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+          {%- if primary_collection != blank -%}
+            <a href="{{ primary_collection.value.url }}" class="reversed-link">{{ primary_collection.value.title }}</a>
+          {%- elsif current_collection != blank -%}
+            <a href="{{ current_collection.url }}" class="reversed-link">{{ current_collection.title }}</a>
+          {%- else -%}
+            <a href="{{ routes.all_products_collection_url }}" class="reversed-link">
+              {{- 'general.breadcrumbs.collections' | t -}}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ product.title }}</span>
+      {%- elsif template contains 'collection' and collection.handle -%}
+        {%- if collection.handle != 'all' -%}
+        {% comment %}  <span aria-hidden="true" class="breadcrumbs--sep"></span> {% endcomment %}
+          <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+          <a href="{{ routes.all_products_collection_url }}" class="reversed-link">
+            {{- 'general.breadcrumbs.collections' | t -}}
+          </a>
+        {% endif %}
+       {% comment %}   <span aria-hidden="true" class="breadcrumbs--sep"></span> {% endcomment %}
+        <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        {%- if current_tags -%}
+          {% capture url %}{{ routes.collections_url }}/{{ collection.handle }}{% endcapture %}
+          {{ collection.title | link_to: url }}
+         {% comment %}   <span aria-hidden="true" class="breadcrumbs--sep"></span> {% endcomment %}
+        <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+          <span class="breadcrumbs--last text-subtext">{{ current_tags | join: ' + ' }}</span>
+        {%- else -%}
+          <span class="breadcrumbs--last text-subtext">{{ collection.title }}</span>
+        {%- endif -%}
+      {%- elsif template == 'list-collections' -%}
+        {% comment %}  <span aria-hidden="true" class="breadcrumbs--sep"></span> {% endcomment %}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ 'templates.collections.title' | t }}</span>
+      {%- elsif template == 'blog' -%}
+       {% comment %}   <span aria-hidden="true" class="breadcrumbs--sep"></span> {% endcomment %}
+         <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        {%- if current_tags -%}
+          {{ blog.title | link_to: blog.url }}
+        <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+          <span class="breadcrumbs--last text-subtext">{{ current_tags | join: ' + ' }}</span>
+        {%- else -%}
+          <span>{{ blog.title }}</span>
+        {%- endif -%}
+      {%- elsif template == 'article' -%}
+          <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        {{ blog.title | link_to: blog.url }}
+          <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ article.title }}</span>
+      {%- elsif template == 'cart' -%}
+          <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ 'general.cart.title' | t }}</span>
+      {%- else -%}
+          <span class="breadcrumbs-content">
+         {% render 'breadcrumbs' %}
+         </span>
+        <span class="breadcrumbs--last text-subtext">{{ page_title }}</span>
+      {%- endif -%}
+    </nav>
+  </div>
+{%- endunless -%}
+<style>
+.breadcrumbs {
+  display: flex;
+    align-items: center;
+  padding: 1.6rem 0 2rem;
+  gap: 5px;
+}
+@media (max-width: 767.98px) {
+  .breadcrumbs {
+    padding: 1.6rem 0;
+  }
+}
+.breadcrumbs a {
+  color: rgb(var(--color-foreground));
+  white-space: nowrap;
+}
+.breadcrumbs--sep {
+  display: block;
+  width: 0.1rem;
+  height: 1.4rem;
+  margin: 0 1.2rem;
+  background: rgba(var(--color-foreground), 0.1);
+}
+.breadcrumbs--last {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breadcrumbs-svg {
+    width: 12px;
+    height: 25px;
+}
+ .breadcrumbs-svg {
+  transform: rotate(-91deg);
+}
+.breadcrumbs-content {
+  display: flex;
+  margin-right: 5px;
+}
+</style>
+{% schema %}
+{
+  "name": "breadcrumbs",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+  },
+  "limit": 1,
+  "settings": [
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right"
+        }
+      ],
+      "default": "start"
+    }
+  ],
+  "presets": [
+    {
+      "name": "breadcrumbs"
+    }
+  ]
+}
+{% endschema %}
