@@ -265,6 +265,7 @@ class QuantityInput extends HTMLElement {
 
   validateQtyRules() {
     const value = parseInt(this.input.value);
+    document.querySelector(".sticky-quantity").value = value;
     if (this.input.min) {
       const buttonMinus = this.querySelector(".quantity__button[name='minus']");
       buttonMinus.classList.toggle('disabled', parseInt(value) <= parseInt(this.input.min));

@@ -101,6 +101,7 @@ class CartItems extends HTMLElement {
               targetElement.replaceWith(sourceElement);
             }
           }
+          cartProgress();
         })
         .catch((e) => {
           console.error(e);
@@ -223,6 +224,7 @@ class CartItems extends HTMLElement {
       })
       .finally(() => {
         this.disableLoading(line);
+        cartProgress();
       });
   }
 
@@ -292,3 +294,30 @@ if (!customElements.get('cart-note')) {
     }
   );
 }
+
+function cartProgress() {
+  let finalPrice = document.querySelector(".total_shipping_value").value;
+  let cartTotal = document.querySelector(".total_shipping_value").getAttribute('cart-total');
+
+  const progressEl = document.getElementById('progress');
+  const truckEl = document.getElementById('truck');
+  const textEl = document.getElementById('shippingText');
+  const span = document.querySelector('.remaining-price');
+
+  // span.innerText = finalPrice - (cartTotal / 100);
+
+  let progressPercent = Math.min(((cartTotal / 100 )/ finalPrice) * 100, 100);
+  progressEl.style.width = progressPercent + "%";
+
+  const barWidth = document.querySelector(".shipping-bar").offsetWidth;
+  truckEl.style.left = `calc(${progressPercent}% - 14px)`;
+
+  if (cartTotal >= finalPrice) {
+    textEl.innerText = "🎉 You’ve unlocked Free Shipping!";
+  } else {
+    let remaining = finalPrice - (cartTotal / 100);
+    textEl.innerText = `Spend ₹${remaining.toFixed(2)} more to get Free Shipping!`;
+  }
+}
+
+cartProgress();

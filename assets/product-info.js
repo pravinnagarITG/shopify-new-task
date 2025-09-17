@@ -15,6 +15,7 @@ if (!customElements.get('product-info')) {
         super();
 
         this.quantityInput = this.querySelector('.quantity__input');
+        
       }
 
       connectedCallback() {
@@ -43,6 +44,7 @@ if (!customElements.get('product-info')) {
         if (!this.dataset.originalSection) {
           this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, this.fetchQuantityRules.bind(this));
         }
+         
       }
 
       disconnectedCallback() {
@@ -61,6 +63,7 @@ if (!customElements.get('product-info')) {
       }
 
       handleOptionValueChange({ data: { event, target, selectedOptionValues } }) {
+        
         if (!this.contains(event.target)) return;
 
         this.resetProductFormState();
@@ -336,6 +339,7 @@ if (!customElements.get('product-info')) {
       }
 
       fetchQuantityRules() {
+        
         const currentVariantId = this.productForm?.variantIdInput?.value;
         if (!currentVariantId) return;
 
@@ -369,6 +373,7 @@ if (!customElements.get('product-info')) {
               } else {
                 current.removeAttribute(attribute);
               }
+            
             }
           } else {
             current.innerHTML = updated.innerHTML;

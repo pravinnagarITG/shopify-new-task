@@ -6,6 +6,22 @@
     "theme_author": "Shopify",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
+  }, 
+  {
+    "name": "Free Shipping Bar",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enble_free_shipping",
+        "label": "Enable Free Shipping Bar"
+      },
+      {
+        "type": "text",
+        "id":"free_shipping_price",
+        "label": "Free Shipping Price",
+        "info": "Example :- 2599"
+      }
+    ]
   },
   {
     "name": "t:settings_schema.logo.name",
