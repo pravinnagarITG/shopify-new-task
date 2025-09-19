@@ -736,6 +736,7 @@ class SliderComponent extends HTMLElement {
     this.pageTotalElement = this.querySelector('.slider-counter--total');
     this.prevButton = this.querySelector('button[name="previous"]');
     this.nextButton = this.querySelector('button[name="next"]');
+    this.printDots = this.querySelector(".slideshow__control-wrapper");
     this.progressBar = this.querySelector('.swiper-pagination-progressbar-fill');
 
     if (!this.slider || !this.nextButton) return;
@@ -777,6 +778,8 @@ class SliderComponent extends HTMLElement {
       this.currentPageElement.textContent = this.currentPage;
       this.pageTotalElement.textContent = this.totalPages;
     }
+
+    //  this.renderDots(this.totalPages, this.currentPage);
 
       if (this.progressBar && this.sliderItemsToShow.length > 0) {
         const totalSlides = this.sliderItemsToShow.length;
@@ -825,6 +828,36 @@ class SliderComponent extends HTMLElement {
       this.nextButton.removeAttribute('disabled');
     }
   }
+
+  renderDots(total, current) {
+  const dotsWrapper = this.printDots;
+  if (!dotsWrapper) return;
+  dotsWrapper.innerHTML = "";
+
+  for (let i = 1; i <= total; i++) {
+    const button = document.createElement("button");
+    button.className = "slider-counter__link slider-counter__link--dots link";
+    if (i === current) {
+      button.classList.add("slider-counter__link--active");
+      button.setAttribute("aria-current", true);
+    }
+
+    button.setAttribute("aria-label", `Slide ${i} of ${total}`);
+    button.setAttribute("aria-controls", `Slider-${this.getAttribute("id") || ""}`);
+
+    button.innerHTML = `<span class="dot"></span>`;
+
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const slideScrollPosition =
+        this.slider.scrollLeft +
+        this.sliderItemsToShow[0].clientWidth * (i - this.currentPage);
+      this.slider.scrollTo({ left: slideScrollPosition });
+    });
+
+    dotsWrapper.appendChild(button);
+  }
+}
 
   isSlideVisible(element, offset = 0) {
     const lastVisibleSlide = this.slider.clientWidth + this.slider.scrollLeft - offset;
