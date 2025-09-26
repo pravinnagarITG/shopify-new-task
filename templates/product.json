@@ -9,6 +9,13 @@
  */
 {
   "sections": {
+    "breadcrumb_N3g7L7": {
+      "type": "breadcrumb",
+      "name": "breadcrumbs",
+      "settings": {
+        "text_alignment": "start"
+      }
+    },
     "main": {
       "type": "main-product",
       "blocks": {
@@ -72,7 +79,7 @@
         "media_size": "large",
         "constrain_to_viewport": true,
         "media_fit": "contain",
-        "gallery_layout": "stacked",
+        "gallery_layout": "thumbnail_slider",
         "mobile_thumbnails": "hide",
         "media_position": "left",
         "image_zoom": "lightbox",
@@ -98,13 +105,6 @@
         "show_rating": false,
         "padding_top": 36,
         "padding_bottom": 28
-      }
-    },
-    "breadcrumb_N3g7L7": {
-      "type": "breadcrumb",
-      "name": "breadcrumbs",
-      "settings": {
-        "text_alignment": "start"
       }
     }
   },

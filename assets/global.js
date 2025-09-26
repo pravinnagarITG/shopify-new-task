@@ -739,10 +739,13 @@ class SliderComponent extends HTMLElement {
     this.printDots = this.querySelector(".slideshow__control-wrapper");
     this.progressBar = this.querySelector('.swiper-pagination-progressbar-fill');
 
+    // ✅ check vertical class
+    this.isVertical = this.classList.contains('thumbnail-slider--vertical');
+
     if (!this.slider || !this.nextButton) return;
 
     this.initPages();
-    const resizeObserver = new ResizeObserver((entries) => this.initPages());
+    const resizeObserver = new ResizeObserver(() => this.initPages());
     resizeObserver.observe(this.slider);
 
     this.slider.addEventListener('scroll', this.update.bind(this));
@@ -751,12 +754,17 @@ class SliderComponent extends HTMLElement {
   }
 
   initPages() {
-    this.sliderItemsToShow = Array.from(this.sliderItems).filter((element) => element.clientWidth > 0);
+    this.sliderItemsToShow = Array.from(this.sliderItems).filter((element) => element.clientWidth > 0 || element.clientHeight > 0);
     if (this.sliderItemsToShow.length < 2) return;
-    this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
-    this.slidesPerPage = Math.floor(
-      (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset
-    );
+
+    if (this.isVertical) {
+      this.sliderItemOffset = this.sliderItemsToShow[1].offsetTop - this.sliderItemsToShow[0].offsetTop;
+      this.slidesPerPage = Math.floor(this.slider.clientHeight / this.sliderItemOffset);
+    } else {
+      this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
+      this.slidesPerPage = Math.floor((this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset);
+    }
+
     this.totalPages = this.sliderItemsToShow.length - this.slidesPerPage + 1;
     this.update();
   }
@@ -767,41 +775,29 @@ class SliderComponent extends HTMLElement {
   }
 
   update() {
-    // Temporarily prevents unneeded updates resulting from variant changes
-    // This should be refactored as part of https://github.com/Shopify/dawn/issues/2057
     if (!this.slider || !this.nextButton) return;
-
     const previousPage = this.currentPage;
-    this.currentPage = Math.round(this.slider.scrollLeft / this.sliderItemOffset) + 1;
+
+    const scrollPos = this.isVertical ? this.slider.scrollTop : this.slider.scrollLeft;
+    this.currentPage = Math.round(scrollPos / this.sliderItemOffset) + 1;
 
     if (this.currentPageElement && this.pageTotalElement) {
       this.currentPageElement.textContent = this.currentPage;
       this.pageTotalElement.textContent = this.totalPages;
     }
 
-    //  this.renderDots(this.totalPages, this.currentPage);
-
-      if (this.progressBar && this.sliderItemsToShow.length > 0) {
-        const totalSlides = this.sliderItemsToShow.length;
-        const visibleSlides = this.slidesPerPage; // e.g. 4
-
-        const maxScroll = this.slider.scrollWidth - this.slider.clientWidth;
-        const scrollRatio = this.slider.scrollLeft / maxScroll;
-
-        // base fill according to visible slides
-        const baseFill = visibleSlides / totalSlides;
-
-        // extra fill from scroll movement
-        const extraFill = (1 - baseFill) * scrollRatio;
-
-        const progress = baseFill + extraFill;
-
-        this.progressBar.style.transform = `translate3d(0,0,0) scaleX(${progress}) scaleY(1)`;
-      }
-
-
-
-
+    if (this.progressBar && this.sliderItemsToShow.length > 0) {
+      const totalSlides = this.sliderItemsToShow.length;
+      const visibleSlides = this.slidesPerPage;
+      const maxScroll = this.isVertical
+        ? this.slider.scrollHeight - this.slider.clientHeight
+        : this.slider.scrollWidth - this.slider.clientWidth;
+      const scrollRatio = scrollPos / maxScroll;
+      const baseFill = visibleSlides / totalSlides;
+      const extraFill = (1 - baseFill) * scrollRatio;
+      const progress = baseFill + extraFill;
+      this.progressBar.style.transform = `translate3d(0,0,0) scaleX(${progress}) scaleY(1)`;
+    }
 
     if (this.currentPage != previousPage) {
       this.dispatchEvent(
@@ -816,72 +812,95 @@ class SliderComponent extends HTMLElement {
 
     if (this.enableSliderLooping) return;
 
-    if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollLeft === 0) {
-      this.prevButton.setAttribute('disabled', 'disabled');
+    if (this.isVertical) {
+      if (this.slider.scrollTop <= 0) {
+        this.prevButton.setAttribute('disabled', 'disabled');
+      } else {
+        this.prevButton.removeAttribute('disabled');
+      }
+      if (this.slider.scrollTop + this.slider.clientHeight >= this.slider.scrollHeight) {
+        this.nextButton.setAttribute('disabled', 'disabled');
+      } else {
+        this.nextButton.removeAttribute('disabled');
+      }
     } else {
-      this.prevButton.removeAttribute('disabled');
-    }
-
-    if (this.isSlideVisible(this.sliderItemsToShow[this.sliderItemsToShow.length - 1])) {
-      this.nextButton.setAttribute('disabled', 'disabled');
-    } else {
-      this.nextButton.removeAttribute('disabled');
+      if (this.isSlideVisible(this.sliderItemsToShow[0]) && this.slider.scrollLeft === 0) {
+        this.prevButton.setAttribute('disabled', 'disabled');
+      } else {
+        this.prevButton.removeAttribute('disabled');
+      }
+      if (this.isSlideVisible(this.sliderItemsToShow[this.sliderItemsToShow.length - 1])) {
+        this.nextButton.setAttribute('disabled', 'disabled');
+      } else {
+        this.nextButton.removeAttribute('disabled');
+      }
     }
   }
 
   renderDots(total, current) {
-  const dotsWrapper = this.printDots;
-  if (!dotsWrapper) return;
-  dotsWrapper.innerHTML = "";
+    const dotsWrapper = this.printDots;
+    if (!dotsWrapper) return;
+    dotsWrapper.innerHTML = "";
 
-  for (let i = 1; i <= total; i++) {
-    const button = document.createElement("button");
-    button.className = "slider-counter__link slider-counter__link--dots link";
-    if (i === current) {
-      button.classList.add("slider-counter__link--active");
-      button.setAttribute("aria-current", true);
+    for (let i = 1; i <= total; i++) {
+      const button = document.createElement("button");
+      button.className = "slider-counter__link slider-counter__link--dots link";
+      if (i === current) {
+        button.classList.add("slider-counter__link--active");
+        button.setAttribute("aria-current", true);
+      }
+      button.setAttribute("aria-label", `Slide ${i} of ${total}`);
+      button.setAttribute("aria-controls", `Slider-${this.getAttribute("id") || ""}`);
+      button.innerHTML = `<span class="dot"></span>`;
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        const scrollValue = this.isVertical
+          ? this.slider.scrollTop + this.sliderItemsToShow[0].clientHeight * (i - this.currentPage)
+          : this.slider.scrollLeft + this.sliderItemsToShow[0].clientWidth * (i - this.currentPage);
+        this.slider.scrollTo(this.isVertical ? { top: scrollValue } : { left: scrollValue });
+      });
+      dotsWrapper.appendChild(button);
     }
-
-    button.setAttribute("aria-label", `Slide ${i} of ${total}`);
-    button.setAttribute("aria-controls", `Slider-${this.getAttribute("id") || ""}`);
-
-    button.innerHTML = `<span class="dot"></span>`;
-
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const slideScrollPosition =
-        this.slider.scrollLeft +
-        this.sliderItemsToShow[0].clientWidth * (i - this.currentPage);
-      this.slider.scrollTo({ left: slideScrollPosition });
-    });
-
-    dotsWrapper.appendChild(button);
   }
-}
 
   isSlideVisible(element, offset = 0) {
-    const lastVisibleSlide = this.slider.clientWidth + this.slider.scrollLeft - offset;
-    return element.offsetLeft + element.clientWidth <= lastVisibleSlide && element.offsetLeft >= this.slider.scrollLeft;
+    if (this.isVertical) {
+      const lastVisibleSlide = this.slider.clientHeight + this.slider.scrollTop - offset;
+      return element.offsetTop + element.clientHeight <= lastVisibleSlide && element.offsetTop >= this.slider.scrollTop;
+    } else {
+      const lastVisibleSlide = this.slider.clientWidth + this.slider.scrollLeft - offset;
+      return element.offsetLeft + element.clientWidth <= lastVisibleSlide && element.offsetLeft >= this.slider.scrollLeft;
+    }
   }
 
   onButtonClick(event) {
     event.preventDefault();
-    const step = event.currentTarget.dataset.step || 1;
-    this.slideScrollPosition =
-      event.currentTarget.name === 'next'
-        ? this.slider.scrollLeft + step * this.sliderItemOffset
-        : this.slider.scrollLeft - step * this.sliderItemOffset;
-    this.setSlidePosition(this.slideScrollPosition);
+    const step = parseInt(event.currentTarget.dataset.step) || 1;
+    const offset = step * this.sliderItemOffset;
+    if (this.isVertical) {
+      this.slideScrollPosition = event.currentTarget.name === 'next'
+        ? this.slider.scrollTop + offset
+        : this.slider.scrollTop - offset;
+      this.slider.scrollTo({ top: this.slideScrollPosition });
+    } else {
+      this.slideScrollPosition = event.currentTarget.name === 'next'
+        ? this.slider.scrollLeft + offset
+        : this.slider.scrollLeft - offset;
+      this.slider.scrollTo({ left: this.slideScrollPosition });
+    }
   }
 
   setSlidePosition(position) {
-    this.slider.scrollTo({
-      left: position,
-    });
+    if (this.isVertical) {
+      this.slider.scrollTo({ top: position });
+    } else {
+      this.slider.scrollTo({ left: position });
+    }
   }
 }
 
 customElements.define('slider-component', SliderComponent);
+
 
 class SlideshowComponent extends SliderComponent {
   constructor() {
@@ -1116,6 +1135,7 @@ class SlideshowComponent extends SliderComponent {
 }
 
 customElements.define('slideshow-component', SlideshowComponent);
+
 
 class VariantSelects extends HTMLElement {
   constructor() {

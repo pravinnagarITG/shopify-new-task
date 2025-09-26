@@ -1,0 +1,539 @@
+{% style %}
+    .product-details-wrapper .custom-background {
+      width:100%;
+      height: 100%;
+    }
+    .product-details-heading h3 {
+      font-size: 35px;
+      font-weight: 400;
+      line-height: 44.31px;
+      text-transform: capitalize;
+      letter-spacing: 0;
+      text-align: center;
+      margin: 0;
+      margin-bottom: 36px;
+    }
+    .window_sticker a, .build_sheet a, .product_attachments a {
+      text-transform: capitalize;
+      text-decoration: underline;
+      font-weight: 500;
+      color: #c41c1c;
+  }
+  .product-detials-tab-content .product-details-files {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+    .product-detials-tab-container .tab-heading {
+      display: flex;
+      align-items: center;
+      border-bottom:.1rem solid rgb(var(--color-border));
+      margin: 0;
+      padding: 0;
+    }
+    .product-detials-tab-container {
+      border: .1rem solid rgb(var(--color-border));
+      border-radius: var(--blocks-radius);
+      overflow: hidden;
+  }
+    .product-detials-tab-container .tab-heading > div {
+      text-align: center;
+      border-right:.1rem solid rgb(var(--color-border));
+  }
+    .product-detials-tab-container .block-grid-2 > div {
+        width: 50%;
+    }
+    .product-detials-tab-container .block-grid-3 > div {
+        width: 33.3%;
+    }
+      .product-detials-tab-container .block-grid-4 > div {
+        width: 25%;
+    }
+    .product-detials-tab-container .block-grid-5 > div {
+        width: 20%;
+    }
+    .product-detials-tab-container .block-grid-6 > div {
+        width: 16.6%;
+    }
+      .tab-heading> div:last-child {
+        border-right: none;
+      }
+
+    .tab-heading a {
+      text-decoration: none;
+      display: block;
+      padding: 14px 20px;
+      margin:0;
+    }
+    .tab-heading p{
+      margin:0;
+      white-space: nowrap;
+    }
+    .product-detials-tab-content {
+      padding: 40px 20px 40px 40px;
+  }
+  .product-detials-tab-content .product-detials-tab .product-description h1,
+  .product-detials-tab-content .product-detials-tab .product-description  h2,
+  .product-detials-tab-content .product-detials-tab .product-description  h3,
+  .product-detials-tab-content .product-detials-tab .product-description  h4,
+  .product-detials-tab-content .product-detials-tab .product-description  h5,
+  .product-detials-tab-content .product-detials-tab .product-description  h6 {
+    margin: 10px 0px;
+    font-size: var(--font-h4-size);
+  }
+    .product-detials-tab-container .tab-heading div.tablinks {
+      background: #c41c1c;
+      color: #fff;
+      overflow: hidden;
+  }
+  .product-detials-tab-container  .product-detials-tab-content ul {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      list-style: inside;
+  }
+    .product-details-heading {
+      padding-top: 40px;
+    }
+  .additional_products .product-card .product-card__image-wrapper {
+    border: 1px solid rgb(var(--color-border));
+  }
+    .product-detials-tab-content table:not([class]) {
+      box-shadow: 0 0 0 0;
+      border-style: initial;
+    }
+    .additional_products{
+      --f-grid-template: auto-flow dense / repeat(5, minmax(0, 1fr));
+    }
+
+    @media screen and (max-width: 749px) {
+      .product-detials-tab-content {
+        padding: 20px 15px 30px 15px;
+    }
+    .tab-heading a {
+      padding: 14px 0px;
+   }
+    }
+
+    .section-{{ section.id }} {
+      --section-padding-top: {{ section.settings.padding_top }}px;
+      --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+      --f-columns-mobile: {{ columns_mobile }};
+      --f-columns-md: {{ columns_tablet }};
+      --f-columns-xl: {{ columns_desktop }};
+    }
+      @media (min-width: 1024px) {
+      .section-{{ section.id }} {
+        --section-padding-top: {{ section.settings.padding_top | times: 0.06510416666666667 }}vw;
+        --section-padding-bottom: {{ section.settings.padding_bottom | times: 0.06510416666666667 }}vw;
+      }
+      .tab-heading a {
+        padding:  0.91vw 1.30vw;
+      }
+      .product-detials-tab-content {
+        padding:2.60vw 1.30vw 2.60vw 2.60vw;
+     }
+     .product-details-heading {
+      padding-top: 2.60vw;
+     }
+     .product-detials-tab-container  .product-detials-tab-content ul {
+      gap: 0.32vw;
+    }
+    .product-detials-tab-content .product-detials-tab .product-description h1,
+    .product-detials-tab-content .product-detials-tab .product-description  h2,
+    .product-detials-tab-content .product-detials-tab .product-description  h3,
+    .product-detials-tab-content .product-detials-tab .product-description  h4,
+    .product-detials-tab-content .product-detials-tab .product-description  h5,
+    .product-detials-tab-content .product-detials-tab .product-description  h6 {
+     margin: 0.65vw 0px;
+  }
+    }
+    @media (max-width: 501px) {
+    .product-detials-tab-container .tab-heading {
+      border-bottom: none;
+      flex-wrap: wrap;
+  }
+    .product-detials-tab-container .tab-heading > div {
+      width: 50%;
+      border-bottom:.1rem solid rgb(var(--color-border));
+  }
+  }
+  @media (max-width: 450px) {
+    .short_description ul {
+      list-style: outside;
+      padding: 0 15px;
+  }
+  .product-detials-tab-container .product-detials-tab-content ul {
+    list-style: outside;
+    padding: 0 15px;
+  }
+  }
+{% endstyle %}
+
+{%- capture image_sizes -%}
+(max-width: 767px) calc((100vw - 30px) / 2),
+(max-width: 1023px) calc((100vw - 30px) / 5),
+calc(100vw / 5)
+{%- endcapture -%}
+
+<div class="product-details-wrapper">
+  <div class="custom-background">
+    <div class="page-width section-{{ section.id }} section--padding">
+      {% if section.settings.heading != blank %}
+        <div class="product-details-heading">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+      <div class="product-detials-tab-container">
+        {% assign valid_block_count = 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'description' %}
+              {% if product.description != blank and block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+            {% when 'factory_options' %}
+              {% assign factory_options = product.metafields.custom.factory_options.value %}
+              {% if factory_options != blank and block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+            {% when 'window_sticker' %}
+              {% assign window_sticker = product.metafields.custom.window_sticker.value %}
+              {% if window_sticker != blank and block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+            {% when 'build_sheet' %}
+              {% assign build_sheet = product.metafields.custom.build_sheet.value %}
+              {% if build_sheet != blank and block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+            {% when 'product_attachments' %}
+              {% assign product_attachments = product.metafields.custom.product_attachments.value %}
+              {% if product_attachments != blank and block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+            {% when 'reviews' %}
+              {% if block.settings.title != blank %}
+                {% assign valid_block_count = valid_block_count | plus: 1 %}
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+        <div class="tab-heading block-grid-{{ valid_block_count }}">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'description' %}
+                {% if product.description != blank %}
+                  <div>
+                    {% if block.settings.title != blank %}
+                      <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+              {% when 'factory_options' %}
+                {% assign factory_options = product.metafields.custom.factory_options.value %}
+                {% if block.settings.title != blank and factory_options != blank %}
+                  <div class="tabdivnks">
+                    <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                  </div>
+                {% endif %}
+
+              {% when 'window_sticker' %}
+                {% assign window_sticker = product.metafields.custom.window_sticker.value %}
+                {% if block.settings.title != blank and window_sticker != blank %}
+                  <div>
+                    <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                  </div>
+                {% endif %}
+
+              {% when 'build_sheet' %}
+                {% assign build_sheet = product.metafields.custom.build_sheet.value %}
+                {% if block.settings.title != blank and build_sheet != blank %}
+                  <div>
+                    <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                  </div>
+                {% endif %}
+
+              {% when 'product_attachments' %}
+                {% assign product_attachments = product.metafields.custom.product_attachments.value %}
+                {% if block.settings.title != blank and product_attachments != blank %}
+                  <div>
+                    <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                  </div>
+                {% endif %}
+
+              {% when 'reviews' %}
+                <div>
+                  {% if block.settings.title != blank %}
+                    <a href="" id="{{ forloop.index }}">{{ block.settings.title }}</a>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+
+        <div class="product-detials-tab-content">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'factory_options' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                  {% assign factory_options = product.metafields.custom.factory_options.value %}
+                  {% if factory_options != blank %}
+                    <div class="product-description">
+                      {{ factory_options }}
+                    </div>
+                  {% else %}
+                    <h5>"This content is currently unavailable."</h5>
+                  {% endif %}
+                </div>
+
+              {% when 'reviews' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                </div>
+
+              {% when 'description' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                  <div class="product-description">
+                    {{ product.description }}
+                  </div>
+
+                  {% assign additional_products = product.metafields.custom.additional_product.value %}
+                  {% if additional_products != blank %}
+                    <div class="product-details-heading section__header">
+                      {{ block.settings.additional_product_title }}
+                    </div>
+
+                    <div class="additional_products products-grid f-grid f-grid--gap-medium f-grid--row-gap-inherit swipe-mobile__inner">
+                      {% if additional_products %}
+                        {% for additional_product in additional_products limit: 5 %}
+                          <div class="f-column swiper-slide">
+                            {% render 'card-product', product: additional_product, image_sizes: image_sizes %}
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+
+              {% when 'window_sticker' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                  {% assign window_sticker = product.metafields.custom.window_sticker %}
+                  {% if window_sticker %}
+                    <div class="window_sticker">
+                      {% for file in product.metafields.custom.window_sticker.value %}
+                        {% assign file_url = file.url %}
+                        {% assign filename_with_query = file_url | split: '/' | last %}
+                        {% assign filename = filename_with_query | split: '?' | first %}
+                        <div class="product-details-files">
+                          <img src="https://cdn.shopify.com/s/files/1/0664/6225/3210/files/pdf_image.webp?v=1747917968" alt="pdf-image" width="20px" height="25px">
+                          <a href="{{ file.url }}" target="_blank">Window Sticker</a>
+                          <span class="file-size" data-url="{{ file.url }}"></span>
+                        </div>
+                        <br>
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                    <h5>"This content is currently unavailable."</h5>
+                  {% endif %}
+                </div>
+
+              {% when 'build_sheet' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                  {% assign build_sheet = product.metafields.custom.build_sheet.value %}
+                  {% if build_sheet %}
+                    <div class="build_sheet">
+                      {% for file in product.metafields.custom.build_sheet.value %}
+                        {% assign file_url = file.url %}
+                        {% assign filename_with_query = file_url | split: '/' | last %}
+                        {% assign filename = filename_with_query | split: '?' | first %}
+                        <div class="product-details-files">
+                          <img src="https://cdn.shopify.com/s/files/1/0664/6225/3210/files/pdf_image.webp?v=1747917968" alt="pdf-image" width="20px" height="25px">
+                          <a href="{{ file.url }}" target="_blank">Build Sheet</a>
+                          <span class="file-size" data-url="{{ file.url }}"></span>
+                        </div>
+                        <br>
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                    <h5>"This content is currently unavailable."</h5>
+                  {% endif %}
+                </div>
+
+              {% when 'product_attachments' %}
+                <div class="product-detials-tab" tab-id="{{ forloop.index }}">
+                  {% assign product_attachments = product.metafields.custom.product_attachments.value %}
+                  {% if product_attachments %}
+                    <div class="product_attachments">
+                      {% for file in product.metafields.custom.product_attachments.value %}
+                        {% assign file_url = file.url %}
+                        {% assign filename_with_query = file_url | split: '/' | last %}
+                        {% assign filename = filename_with_query | split: '?' | first %}
+                        <div class="product-details-files">
+                          <img src="https://cdn.shopify.com/s/files/1/0664/6225/3210/files/pdf_image.webp?v=1747917968" alt="pdf-image" width="20px" height="25px">
+                          <a href="{{ file.url }}" target="_blank">{{ filename }}</a>
+                          <span class="file-size" data-url="{{ file.url }}"></span>
+                        </div>
+                        <br>
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                    <h5>"This content is currently unavailable."</h5>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product details",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+        "type": "range",
+        "id": "padding_top",
+        "label": "t:general.padding.top.label",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px"
+    },
+    {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "t:general.padding.bottom.label",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px"
+    },
+    {
+        "type": "richtext",
+        "id":"heading",
+        "label": "Heading"
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "factory_options",
+      "name":"Factory Options",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+     {
+      "type": "reviews",
+      "name":"Product review",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+     {
+      "type": "description",
+      "name":"Description",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "additional_product_title",
+          "label": "Additional Product Title",
+          "default":"<h4>Available Parts on this Jeep Build</h4>"
+        }
+      ]
+    },
+    {
+      "type": "window_sticker",
+      "name":"Window Sticker",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "build_sheet",
+      "name":"Build Sheet",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "product_attachments",
+      "name":"Product Attachments",
+      "limit":1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+  ],
+  "presets": [
+    {
+      "name": "Product details"
+    }
+  ]
+}
+{% endschema %}
+
+{% if request.page_type == "product" %}
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.product-detials-tab');
+      tabs.forEach(tab => tab.style.display = 'none');
+
+      document.querySelector('.product-detials-tab:first-child').style.display = 'block';
+
+      document.querySelector('.product-detials-tab-container .tab-heading div:first-child').classList.add('tablinks');
+      const links = document.querySelectorAll('.product-detials-tab-container .tab-heading a');
+      links.forEach(link => {
+          link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const id = this.getAttribute('id');
+              tabs.forEach(tab => {
+                  const tabId = tab.getAttribute('tab-id');
+                  tab.style.display = (id === tabId) ? 'block' : 'none';
+              });
+
+              document.querySelectorAll('.product-detials-tab-container .tab-heading div').forEach(li => {
+                  li.classList.remove('tablinks');
+              });
+              this.parentElement.classList.add('tablinks');
+          });
+      });
+  });
+</script>
+{% endif %}
