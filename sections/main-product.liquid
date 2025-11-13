@@ -227,6 +227,8 @@
                     </div>
                   </details>
                 </div>
+
+
               {%- when 'quantity_selector' -%}
                 <div
                   id="Quantity-Form-{{ section.id }}"
@@ -477,6 +479,46 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+                <input id="gift-price" type="number" min="1" placeholder="Enter additional amount" />
+
+<script>
+document.getElementById('add-gift').addEventListener('click', async () => {
+  const price = document.getElementById('gift-price').value;
+  if (!price || Number(price) <= 0) return alert('Enter valid price');
+
+  try {
+    // Call your backend to create variant
+    const resp = await fetch('/create-gift-variant', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ price })
+    });
+    const json = await resp.json();
+    if (!resp.ok) throw new Error(JSON.stringify(json));
+
+    const variantId = json.variant_id;
+
+    // Add to cart via Shopify AJAX
+    const addResp = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    });
+
+    if (!addResp.ok) {
+      const txt = await addResp.text();
+      throw new Error(txt);
+    }
+
+    // Optionally redirect to cart or show success
+    window.location.href = '/cart';
+  } catch (err) {
+    console.error(err);
+    alert('Error: ' + (err.message || 'something went wrong'));
+  }
+});
+</script>
+
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -485,6 +527,8 @@
                   section_id: section.id,
                   show_pickup_availability: true
                 -%}
+                
+
               {%- when 'rating' -%}
                 {%- if product.metafields.reviews.rating.value != blank -%}
                   <div class="rating-wrapper">
@@ -524,13 +568,16 @@
                   </div>
                 {%- endif -%}
               {%- when 'complementary' -%}
+                
                 <product-recommendations
                   class="complementary-products quick-add-hidden{% if block.settings.make_collapsible_row %} is-accordion{% endif %}{% if block.settings.enable_quick_add %} complementary-products-contains-quick-add{% endif %}"
                   data-url="{{ routes.product_recommendations_url }}?limit={{ block.settings.product_list_limit }}&intent=complementary"
                   data-section-id="{{ section.id }}"
                   data-product-id="{{ product.id }}"
                 >
-                  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+                  
+                  {%- if recommendations.performed and recommendations.products_count > 0 or product.metafields.custom.comple_products != blank -%}
+                    
                     <aside
                       aria-label="{{ 'accessibility.complementary_products' | t }}"
                       {{ block.shopify_attributes -}}
@@ -555,8 +602,9 @@
                           {{- 'icon-caret.svg' | inline_asset_content -}}
                           </summary>
                         {%- endif -%}
+                      sd {{ product.metafields.custom.comple_products.list.size }}
                         <slideshow-component class="slider-mobile-gutter">
-                          {%- assign number_of_slides = recommendations.products_count
+                          {%- assign number_of_slides = product.metafields.custom.comple_products.type.size
                             | plus: 0.0
                             | divided_by: block.settings.products_per_page
                             | ceil
@@ -570,7 +618,9 @@
                             {% endif %}
                           >
                             {% assign skip_card_product_styles = false %}
+                            {{number_of_slides }}
                             {%- for i in (1..number_of_slides) -%}
+                              
                               <div
                                 id="Slide-{{ block.id }}-{{ forloop.index }}"
                                 class="complementary-slide complementary-slide--{{ settings.card_style }} grid__item slider__slide slideshow__slide"
@@ -582,7 +632,7 @@
                                 {% endif %}
                               >
                                 <ul class="list-unstyled" role="list">
-                                  {%- for product in recommendations.products
+                                  {%- for product in product.metafields.custom.comple_products.value
                                     limit: block.settings.products_per_page
                                     offset: continue
                                   -%}
@@ -2266,3 +2316,70 @@
   ]
 }
 {% endschema %}
+
+
+
+{% comment %} <div class="color-{{ section.settings.color_scheme }} isolate gradient">
+<div class="events-collabs section-{{ section.id }}-padding">
+   <h2 class="title h1 page-width">{{ section.settings.heading }}</h2>
+  <slideshow-component class="slider-mobile-gutter">
+  <div class="events-collabs__grid {% if show_mobile_slider %}grid slider slider--tablet grid--peek{% endif %}" id="Slider-{{ section.id }}" aria-label="{{ 'general.slider.name' | t }}">
+    {% for block in section.blocks %}
+      {% if block.settings.image %}
+        <div class="slideshow__slide events-collabs__item {% if show_mobile_slider %}grid__item slider__slide{% endif %}"  id="Slide-{{ section.id }}-{{ forloop.index }}">
+          <img src="{{ block.settings.image | img_url: 'master' }}" alt="Event image" width="" height="">
+         
+          <div class="events-collabs__item-overlay  {% if forloop.last %}last-content{% endif %}">
+           <div class="events-collabs__item-overlay-item">
+            <span>1{{ forloop.index }} Comments</span>
+            <span>10{{ forloop.index }}K views</span>
+           </div>
+           <p>A Pop Sensation Redefining the Tequila Industry</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+    <div class="events-collabs__content">
+    <p class="subtitle">{{ section.settings.subtitle }}</p>
+    <h2 class="title">{{ section.settings.title }}</h2>
+    {% if section.settings.link_url != blank %}
+      <a href="{{ section.settings.link_url }}" class="link">{{ section.settings.link_label }}</a>
+    {% endif %}
+  </div>
+  
+  {%- if show_mobile_slider -%}
+    <div class="custom-dots slideshow__controls slider-buttons">
+      <button
+        type="button"
+        class="slider-button slider-button--prev"
+        name="previous"
+        aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}"
+        aria-controls="Slider-{{ section.id }}"
+      >
+        <span class="svg-wrapper">
+          {{- 'icon-caret.svg' | inline_asset_content -}}
+        </span>
+      </button>
+      <div class="slider-counter slider-counter--dots">
+      <div class="slideshow__control-wrapper">
+       
+      </div>
+      </div>
+      <button
+        type="button"
+        class="slider-button slider-button--next"
+        name="next"
+        aria-label="{{ 'sections.slideshow.next_slideshow' | t }}"
+        aria-controls="Slider-{{ section.id }}"
+      >
+        <span class="svg-wrapper">
+          {{- 'icon-caret.svg' | inline_asset_content -}}
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+  </slideshow-component>
+</div>
+</div> {% endcomment %}

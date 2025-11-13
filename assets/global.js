@@ -799,6 +799,8 @@ class SliderComponent extends HTMLElement {
       this.progressBar.style.transform = `translate3d(0,0,0) scaleX(${progress}) scaleY(1)`;
     }
 
+    // this.renderDots(this.totalPages, this.currentPage);
+
     if (this.currentPage != previousPage) {
       this.dispatchEvent(
         new CustomEvent('slideChanged', {

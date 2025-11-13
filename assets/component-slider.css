@@ -387,3 +387,42 @@ slider-component.slider-component-full-width {
 .slider-button--prev:not([disabled]):hover .icon {
   transform: rotate(90deg) scale(1.1);
 }
+
+.product-card-wrapper .slider-button--next, .product-card-wrapper .slider-button--prev {
+    background: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+}
+
+.product-card-carousel .slider--desktop:first-child {
+    margin-left: 0px;
+}
+
+.arrow-ss {
+    background: unset;
+    border: none;
+    padding: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    cursor: pointer;
+}
+.arrow-ss.slider-button--prev {
+    left: 0;
+    right: unset;
+}
+.arrow-ss.slider-button--next {
+    right: 0;
+}
+.product-card-carousel .thumbnail-list {
+    display: flex;
+    position: relative;
+    flex-wrap: inherit;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    min-width: 100%;
+}

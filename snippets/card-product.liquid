@@ -40,6 +40,30 @@
       assign ratio = 1
     endif
   -%}
+  
+  {%- liquid
+  if section.settings.hide_variants and variant_images.size == card_product.media.size
+    assign single_media_visible = true
+  endif
+
+  if limit == 1
+    assign single_media_visible = true
+  endif
+
+  assign media_count = card_product.media.size
+  if section.settings.hide_variants and media_count > 1 and variant_images.size > 0
+    assign media_count = media_count | minus: variant_images.size | plus: 1
+  endif
+
+  if media_count == 1 or single_media_visible
+    assign single_media_visible_mobile = true
+  endif
+
+  if media_count == 0 or single_media_visible_mobile or section.settings.mobile_thumbnails == 'show' or section.settings.mobile_thumbnails == 'columns' and media_count < 3
+    assign hide_mobile_slider = true
+  endif
+-%}
+
   <div class="card-wrapper product-card-wrapper underline-links-hover">
     <div
       class="
@@ -54,11 +78,86 @@
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
       <div
-        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
-        style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+        class="card-product__meida"
       >
         {%- if card_product.featured_media -%}
-          <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
+            <slider-component product-id="{{ card_product.id }}" class="product-card-carousel">
+            <button
+              type="button"
+              class="arrow-ss slider-button--prev {% if media_count <= 1 %} hidden{% endif %}"
+              name="previous"
+              aria-controls="Slider-Thumbnails-{{ card_product.id }}"
+              aria-label="Previous image for {{ card_product.title | escape }}"
+            >
+              <span class="arrow-svg-wrapper">
+                <
+              </span>
+            </button>
+            <ul
+              id="Slider-Thumbnails-{{ card_product.id }}"
+              class="thumbnail-list list-unstyled slider"
+            >
+              {%- for media in card_product.media -%}
+                <li
+                  id="Slide-Thumbnails-{{ card_product.id }}-{{ forloop.index }}"
+                  class="slider__slide card__inner {% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
+                  data-target="{{ card_product.id }}-{{ media.id }}"
+                  style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+                >
+                  <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
+                    <div class="media media--transparent media--hover-effect">
+                       <a
+                        href="{{ card_product.url }}"
+                        id="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}"
+                        class="full-unstyled-link"
+                        aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
+                      >
+                      {{
+                        media.preview_image
+                        | image_url: width: 480
+                        | image_tag:
+                          sizes: sizes,
+                          widths: '180, 212, 240, 280, 330, 400, 480, 535, 600, 750, 1070',
+                          loading: 'lazy',
+                          height:  media.preview_image.height,
+                          width:  media.preview_image.width,
+                          alt: card_collection.title,
+                          class: 'motion-reduce'
+                      }}</a>
+                      {% comment %} <img
+                        srcset="
+                        {%- if media.preview_image.width >= 360 -%}{{ media.preview_image | image_url: width: 360 }} 360w,{%- endif -%}
+                          {%- if media.preview_image.width >= 533 -%}{{ media.preview_image | image_url: width: 533 }} 533w,{%- endif -%}
+                          {%- if media.preview_image.width >= 720 -%}{{ media.preview_image | image_url: width: 720 }} 720w,{%- endif -%}
+                          {%- if media.preview_image.width >= 940 -%}{{ media.preview_image | image_url: width: 940 }} 940w,{%- endif -%}
+                          {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+                        "
+                        src="{{ media.preview_image | image_url: width: 360 }}"
+                        sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                        alt="{{ media.preview_image.alt | escape }}"
+                        class="motion-reduce"
+                        loading="lazy"
+                        width="{{ media.preview_image.width }}"
+                        height="{{ media.preview_image.height }}"
+                      > {% endcomment %}
+                    </div>
+                  </div>
+                </li>
+              {%- endfor -%}
+            </ul>
+            <button
+              type="button"
+              class="arrow-ss slider-button--next {% if media_count <= 1 %} hidden{% endif %}"
+              name="next"
+              aria-controls="Slider-Thumbnails-{{ card_product.id }}"
+              aria-label="Next image for {{ card_product.title | escape }}"
+            >
+              <span class="arrow-svg-wrapper">
+              >
+              </span>
+            </button>
+          </slider-component>
+          {% comment %} <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
             <div class="media media--transparent media--hover-effect">
               {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
               <img
@@ -104,9 +203,9 @@
                 >
               {%- endif -%}
             </div>
-          </div>
+          </div> {% endcomment %}
         {%- endif -%}
-        <div class="card__content">
+        {% comment %} <div class="card__content">
           <div class="card__information">
             <h3
               class="card__heading"
@@ -141,7 +240,7 @@
               </span>
             {%- endif -%}
           </div>
-        </div>
+        </div> {% endcomment %}
       </div>
       <div class="card__content">
         <div class="card__information">

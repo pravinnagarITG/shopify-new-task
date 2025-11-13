@@ -28,35 +28,3 @@
   height: 1.2rem;
   margin-right: 0.7rem;
 }
-
-.header__inline-menu {
-  display: flex;
-  flex-wrap: nowrap;        /* line break hone se roke */
-  overflow-x: auto;         /* scroll enable kare */
-  overflow-y: visible;      /* dropdown ke liye niche space allow */
-  -ms-overflow-style: none; /* scrollbar IE/Edge se hide */
-  scrollbar-width: none;    /* scrollbar Firefox se hide */
-}
-.header__inline-menu .list-menu--inline{
-   flex-wrap: nowrap;
-}
-.header__inline-menu::-webkit-scrollbar {
-  display: none; /* scrollbar Chrome/Safari se hide */
-}
-.header--top-center .header__inline-menu {
-    justify-self: unset;
-}
-
-header .list-menu--disclosure {
-  top: 82%;
-  min-width: max-content;
-  width: max-content;
-}
-
-header header-menu>details, details-disclosure>details {
-    position: static;
-}
-
-.list-menu__item {
-    white-space: nowrap;
-}

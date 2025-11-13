@@ -3673,3 +3673,94 @@ details-disclosure > details {
         justify-content: center;
     }
 }
+
+.header__inline-menu {
+  display: flex;
+  flex-wrap: nowrap;        /* line break hone se roke */
+  overflow-x: auto;         /* scroll enable kare */
+  overflow-y: visible;      /* dropdown ke liye niche space allow */
+  -ms-overflow-style: none; /* scrollbar IE/Edge se hide */
+  scrollbar-width: none;    /* scrollbar Firefox se hide */
+}
+.header__inline-menu .list-menu--inline{
+   flex-wrap: nowrap;
+}
+.header__inline-menu::-webkit-scrollbar {
+  display: none; /* scrollbar Chrome/Safari se hide */
+}
+.header--top-center .header__inline-menu {
+    justify-self: unset;
+}
+
+header .list-menu--disclosure {
+  top: 82%;
+  min-width: max-content;
+  width: max-content;
+}
+
+header header-menu>details, details-disclosure>details {
+    position: static;
+}
+
+.list-menu__item {
+    white-space: nowrap;
+}
+
+/* .custom-search {
+    width: 40rem;
+    position: absolute;
+    top: 0;
+    background: #fff;
+    right: 0;
+    height: 100vh;
+} */
+
+header .modal__content {
+    left: unset;
+    width: 40rem;
+    right: -100%;
+    opacity:1;
+    /* animation:unset; */
+    height: 100vh;
+}
+header details[open]>.search-modal.modal__content {
+    opacity: 1;
+     right: -0%;
+    animation:
+}
+@keyframes animateMenu {
+  0% {
+    opacity: 0;
+     right:-50%;
+  }
+
+  100% {
+    opacity: 1;
+    right:-100%;
+  }
+}
+.search-modal__content {
+    padding: 2rem;
+}
+.search-modal__content {
+    align-items: flex-start;
+}
+predictive-search .field::after{
+  display:none;
+}
+predictive-search .search__input {
+  border-bottom:1px solid #000;
+}
+
+predictive-search .search__input:focus{
+  box-shadow: none;
+  outline: 0;
+  border-radius: var(--inputs-radius);
+}
+.search-modal__content .search-modal__close-button{
+  display:none;
+}
+
+.predictive-search__results-groups-wrapper {
+    flex-direction: column;
+}
