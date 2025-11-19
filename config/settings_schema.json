@@ -1397,7 +1397,35 @@
         "default": false,
         "label": "t:settings_schema.search_input.settings.predictive_search_show_price.label",
         "info": "t:settings_schema.search_input.settings.predictive_search_show_price.info"
-      }
+      },
+      {
+        "type": "header",
+        "content": "Search drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "search_drawer",
+        "label": "Show search drawer",
+        "default": false,
+        "info": "Shows a drawer with search results and suggested collections."
+      },
+      {
+        "type": "text",
+        "id": "heading_category",
+        "label": "Title",
+        "default": "Popular Categories"
+      },
+      {
+        "type": "link_list",
+        "id": "search_link_list",
+        "label": "Select Popular link list",
+      },
+      {
+        "type": "color_scheme",
+        "id": "search_color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-4"
+      },
     ]
   },
   {

@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
@@ -296,9 +297,11 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -313,6 +316,479 @@
       {{ content_for_layout }}
     </main>
 
+    {%- if settings.search_drawer -%}
+      {%- render 'search-drawer' -%}
+    {%- endif -%}
+ 
+{% comment %} <section class="mwg_effect000 page-width">
+    <div class="header">
+        <div>
+            <p class="button button1">
+                <span>3d & stuff</span>
+            </p>
+        </div>
+        <div>12 items saved in your collection</div>
+        <div>
+            <p class="button button2">Add more</p>
+        </div>
+    </div>
+
+    <div class="medias">
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/19.png?v=1763016413" alt=""></div>
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/Light_Tampons.png?v=1763016408" alt=""></div>
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/19.png?v=1763016413" alt=""></div>
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/Light_Tampons.png?v=1763016408" alt=""></div>
+         <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/19.png?v=1763016413" alt=""></div>
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/Light_Tampons.png?v=1763016408" alt=""></div>
+         <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/19.png?v=1763016413" alt=""></div>
+        <div class="medias"><img src="https://cdn.shopify.com/s/files/1/0319/7606/3111/files/Light_Tampons.png?v=1763016408" alt=""></div>
+    </div>
+</section>
+
+<div class="main-grid">
+  <div class="gridss">
+    <div class="row">
+      <div class="cell" data-x="0" data-y="0"></div>
+      <div class="cell" data-x="0" data-y="1"></div>
+      <div class="cell" data-x="0" data-y="2"></div>
+      <div class="cell" data-x="0" data-y="3"></div>
+      <div class="cell" data-x="0" data-y="4"></div>
+      <div class="cell" data-x="0" data-y="5"></div>
+      <div class="cell" data-x="0" data-y="6"></div>
+      <div class="cell" data-x="0" data-y="7"></div>
+      <div class="cell" data-x="0" data-y="8"></div>
+      <div class="cell" data-x="0" data-y="9"></div>
+      <div class="cell" data-x="0" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="1" data-y="0"></div>
+      <div class="cell" data-x="1" data-y="1"></div>
+      <div class="cell" data-x="1" data-y="2"></div>
+      <div class="cell" data-x="1" data-y="3"></div>
+      <div class="cell" data-x="1" data-y="4"></div>
+      <div class="cell" data-x="1" data-y="5"></div>
+      <div class="cell" data-x="1" data-y="6"></div>
+      <div class="cell" data-x="1" data-y="7"></div>
+      <div class="cell" data-x="1" data-y="8"></div>
+      <div class="cell" data-x="1" data-y="9"></div>
+      <div class="cell" data-x="1" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="2" data-y="0"></div>
+      <div class="cell" data-x="2" data-y="1"></div>
+      <div class="cell" data-x="2" data-y="2"></div>
+      <div class="cell" data-x="2" data-y="3"></div>
+      <div class="cell" data-x="2" data-y="4"></div>
+      <div class="cell" data-x="2" data-y="5"></div>
+      <div class="cell" data-x="2" data-y="6"></div>
+      <div class="cell" data-x="2" data-y="7"></div>
+      <div class="cell" data-x="2" data-y="8"></div>
+      <div class="cell" data-x="2" data-y="9"></div>
+      <div class="cell" data-x="2" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="3" data-y="0"></div>
+      <div class="cell" data-x="3" data-y="1"></div>
+      <div class="cell" data-x="3" data-y="2"></div>
+      <div class="cell" data-x="3" data-y="3"></div>
+      <div class="cell" data-x="3" data-y="4"></div>
+      <div class="cell" data-x="3" data-y="5"></div>
+      <div class="cell" data-x="3" data-y="6"></div>
+      <div class="cell" data-x="3" data-y="7"></div>
+      <div class="cell" data-x="3" data-y="8"></div>
+      <div class="cell" data-x="3" data-y="9"></div>
+      <div class="cell" data-x="3" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="4" data-y="0"></div>
+      <div class="cell" data-x="4" data-y="1"></div>
+      <div class="cell" data-x="4" data-y="2"></div>
+      <div class="cell" data-x="4" data-y="3"></div>
+      <div class="cell" data-x="4" data-y="4"></div>
+      <div class="cell" data-x="4" data-y="5"></div>
+      <div class="cell" data-x="4" data-y="6"></div>
+      <div class="cell" data-x="4" data-y="7"></div>
+      <div class="cell" data-x="4" data-y="8"></div>
+      <div class="cell" data-x="4" data-y="9"></div>
+      <div class="cell" data-x="4" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="5" data-y="0"></div>
+      <div class="cell" data-x="5" data-y="1"></div>
+      <div class="cell" data-x="5" data-y="2"></div>
+      <div class="cell" data-x="5" data-y="3"></div>
+      <div class="cell" data-x="5" data-y="4"></div>
+      <div class="cell" data-x="5" data-y="5"></div>
+      <div class="cell" data-x="5" data-y="6"></div>
+      <div class="cell" data-x="5" data-y="7"></div>
+      <div class="cell" data-x="5" data-y="8"></div>
+      <div class="cell" data-x="5" data-y="9"></div>
+      <div class="cell" data-x="5" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="6" data-y="0"></div>
+      <div class="cell" data-x="6" data-y="1"></div>
+      <div class="cell" data-x="6" data-y="2"></div>
+      <div class="cell" data-x="6" data-y="3"></div>
+      <div class="cell" data-x="6" data-y="4"></div>
+      <div class="cell" data-x="6" data-y="5"></div>
+      <div class="cell" data-x="6" data-y="6"></div>
+      <div class="cell" data-x="6" data-y="7"></div>
+      <div class="cell" data-x="6" data-y="8"></div>
+      <div class="cell" data-x="6" data-y="9"></div>
+      <div class="cell" data-x="6" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="7" data-y="0"></div>
+      <div class="cell" data-x="7" data-y="1"></div>
+      <div class="cell" data-x="7" data-y="2"></div>
+      <div class="cell" data-x="7" data-y="3"></div>
+      <div class="cell" data-x="7" data-y="4"></div>
+      <div class="cell" data-x="7" data-y="5"></div>
+      <div class="cell" data-x="7" data-y="6"></div>
+      <div class="cell" data-x="7" data-y="7"></div>
+      <div class="cell" data-x="7" data-y="8"></div>
+      <div class="cell" data-x="7" data-y="9"></div>
+      <div class="cell" data-x="7" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="8" data-y="0"></div>
+      <div class="cell" data-x="8" data-y="1"></div>
+      <div class="cell" data-x="8" data-y="2"></div>
+      <div class="cell" data-x="8" data-y="3"></div>
+      <div class="cell" data-x="8" data-y="4"></div>
+      <div class="cell" data-x="8" data-y="5"></div>
+      <div class="cell" data-x="8" data-y="6"></div>
+      <div class="cell" data-x="8" data-y="7"></div>
+      <div class="cell" data-x="8" data-y="8"></div>
+      <div class="cell" data-x="8" data-y="9"></div>
+      <div class="cell" data-x="8" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="9" data-y="0"></div>
+      <div class="cell" data-x="9" data-y="1"></div>
+      <div class="cell" data-x="9" data-y="2"></div>
+      <div class="cell" data-x="9" data-y="3"></div>
+      <div class="cell" data-x="9" data-y="4"></div>
+      <div class="cell" data-x="9" data-y="5"></div>
+      <div class="cell" data-x="9" data-y="6"></div>
+      <div class="cell" data-x="9" data-y="7"></div>
+      <div class="cell" data-x="9" data-y="8"></div>
+      <div class="cell" data-x="9" data-y="9"></div>
+      <div class="cell" data-x="9" data-y="10"></div>
+    </div>
+    <div class="row">
+      <div class="cell" data-x="10" data-y="0"></div>
+      <div class="cell" data-x="10" data-y="1"></div>
+      <div class="cell" data-x="10" data-y="2"></div>
+      <div class="cell" data-x="10" data-y="3"></div>
+      <div class="cell" data-x="10" data-y="4"></div>
+      <div class="cell" data-x="10" data-y="5"></div>
+      <div class="cell" data-x="10" data-y="6"></div>
+      <div class="cell" data-x="10" data-y="7"></div>
+      <div class="cell" data-x="10" data-y="8"></div>
+      <div class="cell" data-x="10" data-y="9"></div>
+      <div class="cell" data-x="10" data-y="10"></div>
+    </div>
+  </div>
+</div> {% endcomment %}
+
+<style>
+.mwg_effect000 {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.mwg_effect000 .header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid #323232;
+    padding: 20px 25px;
+    color: #BAB8B9;
+}
+.mwg_effect000 .header div:nth-child(2) {
+    font-size: 26px;
+}
+.mwg_effect000 .header div:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+.mwg_effect000 .button {
+    font-size: 14px;
+    text-transform: uppercase;
+    
+    border-radius: 24px;
+    height: 48px;
+    gap: 5px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    width: max-content; 
+}
+.mwg_effect000 .button1 {
+    background-color: #232323;
+}
+.mwg_effect000 .button2 {
+    border: 1px solid #323232;
+}
+
+
+.mwg_effect000 .button img {
+    width: 22px;
+    height: auto;
+    display: block;
+}
+
+.mwg_effect000 .medias {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1vw;
+}
+.mwg_effect000 .medias img {
+    width: 11vw !important;
+    height: 11vw !important;
+    object-fit: contain !important;
+    border-radius: 4%;
+    display: block;
+    pointer-events: none;
+    will-change: transform;
+    position: unset !important;
+}
+
+@media (max-width: 768px) {
+    .mwg_effect000 .header {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .mwg_effect000 .header div:nth-child(2) {
+        display: none;
+    }
+    .mwg_effect000 .medias {
+        gap: 2vw;
+    }
+    .mwg_effect000 .medias img {
+        width: 18vw;
+        height: 18vw;
+    }
+}
+
+{% comment %} .main-grid {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  background-color: #0e100f;
+  height: 100svh;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+} {% endcomment %}
+
+.gridss {
+  --gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  background: #000;
+  padding:10px;
+}
+
+.row {
+  display: flex;
+  gap: var(--gap);
+}
+
+.cell {
+  --size: 24px;
+  width: var(--size);
+  height: var(--size);
+  background-color: #fffce1;
+  border-radius: 50%;
+  will-change: transform;
+  cursor: pointer;
+  display:block !important;
+}
+</style>
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script> {% endcomment %}
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(InertiaPlugin)
+
+    let oldX = 0, 
+        oldY = 0, 
+        deltaX = 0,
+        deltaY = 0
+    
+    const root = document.querySelector('.mwg_effect000')
+    root.addEventListener("mousemove", (e) => {
+        // Calculate horizontal movement since the last mouse position
+        deltaX = e.clientX - oldX;
+
+        // Calculate vertical movement since the last mouse position
+        deltaY = e.clientY - oldY;
+
+        // Update old coordinates with the current mouse position
+        oldX = e.clientX;
+        oldY = e.clientY;
+    })
+
+    root.querySelectorAll('.medias').forEach(el => {
+
+        // Add an event listener for when the mouse enters each media
+        el.addEventListener('mouseenter', () => {
+            
+            const tl = gsap.timeline({ 
+                onComplete: () => {
+                    tl.kill()
+                }
+            })
+            tl.timeScale(1.2) // Animation will play 20% faster than normal
+            
+            const image = el.querySelector('img')
+            tl.to(image, {
+               inertia: {
+                    x: {
+                        velocity: deltaX * 30, // Higher number = movement amplified
+                        end: 0 // Go back to the initial position
+                    },
+                    y: {
+                        velocity: deltaY * 30, // Higher number = movement amplified
+                        end: 0 // Go back to the initial position
+                    },
+                },
+            })
+            tl.fromTo(image, {
+                rotate: 0
+            }, {
+                duration: 0.4,
+                rotate:(Math.random() - 0.5) * 30, // Returns a value between -15 & 15
+                yoyo: true, 
+                repeat: 1,
+                ease: 'power1.inOut' // Will slow at the begin and the end
+            }, '<') // The animation starts at the same time as the previous tween
+        })
+    })
+})
+{% comment %}  {% endcomment %}
+
+const grid = document.querySelector('.gridss');
+const rows = [...document.querySelectorAll('.row')];
+const cells = [...document.querySelectorAll('.cell')];
+
+let clicked = false;
+let reset_all = false;
+
+const pull_distance = 70;
+
+const updateCellPositions = () => {
+  cells.forEach((cell) => {
+    const rect = cell.getBoundingClientRect();
+    cell.center_position = {
+      x: (rect.left + rect.right) / 2,
+      y: (rect.top + rect.bottom) / 2,
+    };
+  });
+};
+
+const handleCellClick = (e, i) => {
+  if (clicked) {
+    return;
+  }
+  
+  clicked = true;
+  
+  gsap.to('.cell', {
+    duration: 1.6,
+    physics2D: {
+      velocity: 'random(400, 1000)',
+      angle: 'random(250, 290)',
+      gravity: 2000
+    },
+    stagger: {
+      grid: [rows.length, rows[0].children.length],
+      from: i,
+      amount: 0.3
+    },
+    onComplete: function () {
+      this.timeScale(-1.3);
+    },
+    onReverseComplete: () => {
+      clicked = false;
+      reset_all = true;
+      handlePointerMove();
+    },
+  });
+};
+
+const handlePointerMove = (e = { x: -pull_distance, y: -pull_distance }) => {
+  if (clicked) {
+    return;
+  }
+
+  const { pageX: pointer_x, pageY: pointer_y } = e;
+  cells.forEach((cell, i) => {
+    const diff_x = pointer_x - cell.center_position.x;
+    const diff_y = pointer_y - cell.center_position.y;
+    const distance = Math.sqrt(diff_x * diff_x + diff_y * diff_y);
+
+    if (distance < pull_distance) {
+      const percent = distance / pull_distance; // Should probably be 1 - distance / pull_distance but I like this effect better
+      cell.pulled = true;
+      gsap.to(cell, {
+        duration: 0.2,
+        x: diff_x * percent,
+        y: diff_y * percent,
+      });
+    } else {
+      if (!cell.pulled) {
+        return;
+      }
+      
+      cell.pulled = false;
+      
+      gsap.to(cell, {
+        duration: 1,
+        x: 0,
+        y: 0,
+        ease: "elastic.out(1, 0.3)",
+      });
+    }
+  });
+  
+  if (reset_all) {
+    reset_all = false;
+    gsap.to(cells, {
+      duration: 1,
+      x: 0,
+      y: 0,
+      ease: "elastic.out(1, 0.3)",
+    });
+  }
+};
+
+const init = () => {
+  updateCellPositions();
+  window.addEventListener('resize', updateCellPositions);
+  window.addEventListener('pointermove', handlePointerMove);
+  document.body.addEventListener('pointerleave', () => handlePointerMove());
+
+  cells.forEach((cell, i) =>
+    cell.addEventListener('pointerup', (e) => handleCellClick(e, i))
+  );
+};
+
+init();
+</script>
     {% sections 'footer-group' %}
 
     <ul hidden>
@@ -373,89 +849,5 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     {% section 'sticky-atc' %}
-    {% comment %} <div class="custom-search">
-      <div class="modal-overlay"></div>
-      {% assign input_id = 'Search-In-Modal-1' %}
-    <div
-      class="search-modal modal__content gradient"
-      role="dialog"
-      aria-modal="true"
-      aria-label="{{ 'general.search.search' | t }}"
-    >
-    
-      <div
-        class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
-        tabindex="-1"
-      >
-        {%- if settings.predictive_search_enabled -%}
-          <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
-        {%- else -%}
-          <search-form class="search-modal__form">
-        {%- endif -%}
-        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
-          <div class="field">
-            <input
-              class="search__input field__input"
-              id="{{ input_id }}"
-              type="search"
-              name="q"
-              value="{{ search.terms | escape }}"
-              placeholder="{{ 'general.search.search' | t }}"
-              {%- if settings.predictive_search_enabled -%}
-                role="combobox"
-                aria-expanded="false"
-                aria-owns="predictive-search-results"
-                aria-controls="predictive-search-results"
-                aria-haspopup="listbox"
-                aria-autocomplete="list"
-                autocorrect="off"
-                autocomplete="off"
-                autocapitalize="off"
-                spellcheck="false"
-              {%- endif -%}
-            >
-            <label class="field__label" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
-            <input type="hidden" name="options[prefix]" value="last">
-            <button
-              type="reset"
-              class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
-              aria-label="{{ 'general.search.reset' | t }}"
-            >
-              <span class="svg-wrapper">
-                {{- 'icon-reset.svg' | inline_asset_content -}}
-              </span>
-            </button>
-            <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
-              <span class="svg-wrapper">
-                {{- 'icon-search.svg' | inline_asset_content -}}
-              </span>
-            </button>
-          </div>
-
-          {%- if settings.predictive_search_enabled -%}
-            <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
-              {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
-            </div>
-
-            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
-          {%- endif -%}
-        </form>
-        {%- if settings.predictive_search_enabled -%}
-          </predictive-search>
-        {%- else -%}
-          </search-form>
-        {%- endif -%}
-        <button
-          type="button"
-          class="search-modal__close-button modal__close-button link link--text focus-inset"
-          aria-label="{{ 'accessibility.close' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-close.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      </div>
-    </div>
-    </div> {% endcomment %}
   </body>
 </html>

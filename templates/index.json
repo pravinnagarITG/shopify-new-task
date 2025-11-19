@@ -132,6 +132,7 @@
         "button_ENeNLc",
         "mobile_text_BBPqJy"
       ],
+      "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "show_full_width": true,
@@ -204,6 +205,7 @@
         "image_PAnK4H",
         "image_n98g8j"
       ],
+      "disabled": true,
       "name": "image-with-text-slide",
       "settings": {
         "height": "adapt",
@@ -222,6 +224,7 @@
     },
     "featured_collection_jkdYBN": {
       "type": "featured-collection",
+      "disabled": true,
       "name": "t:sections.featured-collection.presets.name",
       "settings": {
         "collection": "top-selling",
@@ -290,6 +293,7 @@
         "column_4iCq63",
         "column_UqNpMN"
       ],
+      "disabled": true,
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
         "title": "Multicolumn",
@@ -308,6 +312,24 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_video_CtYebp": {
+      "type": "custom-video",
+      "name": "Custom video",
+      "settings": {
+        "heading": "Video",
+        "heading_size": "h0",
+        "button_label_1": "Button label",
+        "button_link_1": "#",
+        "button_style_secondary_1": false,
+        "video": "shopify://files/videos/-5567-4371-8155-e004c2bb70d3.mp4",
+        "enable_video_looping": true,
+        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
@@ -316,6 +338,7 @@
     "image_with_text_DDwMXN",
     "custom_image_slide_RabiKQ",
     "featured_collection_jkdYBN",
-    "multicolumn_tqNRLj"
+    "multicolumn_tqNRLj",
+    "custom_video_CtYebp"
   ]
 }

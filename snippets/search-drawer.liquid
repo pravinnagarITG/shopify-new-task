@@ -1,0 +1,100 @@
+<search-drawer class="drawer">
+    <div id="SearchDrawer" class="search-drawer">
+        <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
+        <div class="drawer__inner gradient color-{{ settings.search_color_scheme }}"
+            role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}" tabindex="-1">
+                <div class="predictive-search-bar-drawer">
+                    {%- if settings.predictive_search_enabled -%}
+                        <div class="search-header-with-close-button">
+                            <h2 class="main-search-heading">Search</h2>
+                            <button
+                                type="button"
+                                class="search-modal__close-button modal__close-button link link--text focus-inset"
+                                aria-label="{{ 'accessibility.close' | t }}"
+                                >
+                                <span class="svg-wrapper">
+                                    {{- 'icon-close.svg' | inline_asset_content -}}
+                                </span>
+                            </button>
+                        </div>
+                        <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+                        {%- else -%}
+                        <search-form class="search-modal__form">
+                        {%- endif -%}
+                        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+                        <div class="field">
+                        <input
+                        class="search__input field__input"
+                        id="{{ input_id }}"
+                        type="search"
+                        name="q"
+                        value="{{ search.terms | escape }}"
+                        placeholder="{{ 'general.search.search' | t }}"
+                        {%- if settings.predictive_search_enabled -%}
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-owns="predictive-search-results"
+                            aria-controls="predictive-search-results"
+                            aria-haspopup="listbox"
+                            aria-autocomplete="list"
+                            autocorrect="off"
+                            autocomplete="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        {%- endif -%}
+                        >
+                        <label class="field__label" for="{{ input_id }}">Search…</label>
+                        <input type="hidden" name="options[prefix]" value="last">
+                        <button
+                        type="reset"
+                        class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
+                        aria-label="{{ 'general.search.reset' | t }}"
+                        >
+                        <span class="svg-wrapper">
+                            {{- 'icon-reset.svg' | inline_asset_content -}}
+                        </span>
+                        </button>
+                        <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false" color="#fff" style="user-select: none; width: 22px; height: 22px; display: inline-block; fill: #fff; color:#fff; flex-shrink: 0;"><g color="#fff" weight="regular"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></g></svg>
+                        </button>
+                    </div>
+
+                    {%- if settings.predictive_search_enabled -%}
+                        <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+                        {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+                        </div>
+
+                        <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+                    {%- endif -%}
+                    </form>
+                    {%- if settings.predictive_search_enabled -%}
+                    </predictive-search>
+                    {%- else -%}
+                    </search-form>
+                    {%- endif -%}
+                </div>
+                <div class="popular_product_categories">
+                    <h3 class="h3">{{ settings.heading_category }}</h3>
+                    <ul class="popular_products">
+                        {%- for link in settings.search_link_list.links -%}
+                            <li class="list_collection">
+                                <a href="{{ link.url }}">{{ link.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="social-icons">
+                     {%- render 'social-icons', class: 'drawer__list-social' -%}
+                    {% comment %} <a href="{{ settings.social_facebook_link }}" target="_blank" class="facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false" color="rgb(73, 245, 39)" style="user-select: none; width: 28px; height: 28px; display: inline-block; fill: rgb(73, 245, 39); color:rgb(73, 245, 39); flex-shrink: 0;"><g color="rgb(73, 245, 39)" weight="light"><path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm6,191.8V150h26a6,6,0,0,0,0-12H134V112a18,18,0,0,1,18-18h16a6,6,0,0,0,0-12H152a30,30,0,0,0-30,30v26H96a6,6,0,0,0,0,12h26v67.8a90,90,0,1,1,12,0Z"></path></g></svg>
+                    </a>
+                    <a href="{{ settings.social_instagram_link }}" target="_blank" class="instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false" color="rgb(73, 245, 39)" style="user-select: none; width: 28px; height: 28px; display: inline-block; fill: rgb(73, 245, 39); color:rgb(73, 245, 39); flex-shrink: 0;"><g color="rgb(73, 245, 39)" weight="light"><path d="M128,82a46,46,0,1,0,46,46A46.06,46.06,0,0,0,128,82Zm0,80a34,34,0,1,1,34-34A34,34,0,0,1,128,162ZM176,26H80A54.06,54.06,0,0,0,26,80v96a54.06,54.06,0,0,0,54,54h96a54.06,54.06,0,0,0,54-54V80A54.06,54.06,0,0,0,176,26Zm42,150a42,42,0,0,1-42,42H80a42,42,0,0,1-42-42V80A42,42,0,0,1,80,38h96a42,42,0,0,1,42,42ZM190,76a10,10,0,1,1-10-10A10,10,0,0,1,190,76Z"></path></g></svg>
+                    </a>
+                    <a href="{{ settings.social_twitter_link }}" target="_blank" class="twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false" color="rgb(73, 245, 39)" style="user-select: none; width: 28px; height: 28px; display: inline-block; fill:rgb(73, 245, 39); color: rgb(73, 245, 39); flex-shrink: 0;"><g color=" rgb(73, 245, 39)" weight="light"><path d="M213.06,212.78l-63.42-99.66L212.44,44A6,6,0,1,0,203.56,36L143,102.62l-41.9-65.84A6,6,0,0,0,96,34H48a6,6,0,0,0-5.06,9.22l63.42,99.66L43.56,212A6,6,0,0,0,52.44,220L113,153.38l41.9,65.84A6,6,0,0,0,160,222h48a6,6,0,0,0,5.06-9.22ZM163.29,210,58.93,46H92.71L197.07,210Z"></path></g></svg>
+                    </a> {% endcomment %}
+                </div>
+        </div>
+    </div>
+</search-drawer>

@@ -73,7 +73,7 @@
   {%- endif -%}
 
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
-  <div class="page-width">
+  <div class="page-width"> 
     <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
       <div class="grid__item product__media-wrapper">
         {% render 'product-media-gallery', variant_images: variant_images %}
@@ -479,45 +479,6 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
-                <input id="gift-price" type="number" min="1" placeholder="Enter additional amount" />
-
-<script>
-document.getElementById('add-gift').addEventListener('click', async () => {
-  const price = document.getElementById('gift-price').value;
-  if (!price || Number(price) <= 0) return alert('Enter valid price');
-
-  try {
-    // Call your backend to create variant
-    const resp = await fetch('/create-gift-variant', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ price })
-    });
-    const json = await resp.json();
-    if (!resp.ok) throw new Error(JSON.stringify(json));
-
-    const variantId = json.variant_id;
-
-    // Add to cart via Shopify AJAX
-    const addResp = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1 })
-    });
-
-    if (!addResp.ok) {
-      const txt = await addResp.text();
-      throw new Error(txt);
-    }
-
-    // Optionally redirect to cart or show success
-    window.location.href = '/cart';
-  } catch (err) {
-    console.error(err);
-    alert('Error: ' + (err.message || 'something went wrong'));
-  }
-});
-</script>
 
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
