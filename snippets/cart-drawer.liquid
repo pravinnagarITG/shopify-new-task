@@ -175,7 +175,11 @@
                    <input type="text" class="total_shipping_value" value="{{ settings.free_shipping_price }}" cart-total="{{ cart.total_price }}">
                   </thead>
                   <tbody role="rowgroup">
-                    {%- for item in cart.items -%}
+
+                {% assign items = cart.items %}
+                  {% for item in items %}
+                  {% unless item.properties.isaddon == 'true' %}
+                    {% assign addon_group = item.properties.addon %}
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
                         class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
@@ -237,6 +241,7 @@
                             or item.properties.size != 0
                             or item.selling_plan_allocation != null
                           -%}
+                           {% unless item.properties.isaddon %} 
                             <dl>
                               {%- if item.product.has_only_default_variant == false -%}
                                 {%- for option in item.options_with_values -%}
@@ -250,7 +255,10 @@
                                 {%- endfor -%}
                               {%- endif -%}
 
+                            
                               {%- for property in item.properties -%}
+                               {% unless item.properties.isaddon %} 
+                                {% unless property.first == 'addon' %}                  
                                 {%- assign property_first_char = property.first | slice: 0 -%}
                                 {%- if property.last != blank and property_first_char != '_' -%}
                                   <div class="product-option">
@@ -271,9 +279,11 @@
                                     </dd>
                                   </div>
                                 {%- endif -%}
+                                {% endunless %}
+                                {% endunless %}
                               {%- endfor -%}
                             </dl>
-
+                           {% endunless %}
                             <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
                           {%- endif -%}
 
@@ -290,36 +300,37 @@
                             {%- endfor -%}
                           </ul>
                         </td>
-
-                        <td class="cart-item__totals right" role="cell" headers="CartDrawer-ColumnTotal">
-                          {%- render 'loading-spinner' -%}
-                          <div class="cart-item__price-wrapper">
-                            {%- if item.original_line_price != item.final_line_price -%}
-                              <div class="cart-item__discounted-prices">
-                                <span class="visually-hidden">
-                                  {{ 'products.product.price.regular_price' | t }}
-                                </span>
-                                <s class="cart-item__old-price price price--end">
-                                  {{ item.original_line_price | money }}
-                                </s>
-                                <span class="visually-hidden">
-                                  {{ 'products.product.price.sale_price' | t }}
-                                </span>
+                        {% unless item.properties.isaddon %} 
+                          <td class="cart-item__totals right" role="cell" headers="CartDrawer-ColumnTotal">
+                            {%- render 'loading-spinner' -%}
+                            <div class="cart-item__price-wrapper">
+                              {%- if item.original_line_price != item.final_line_price -%}
+                                <div class="cart-item__discounted-prices">
+                                  <span class="visually-hidden">
+                                    {{ 'products.product.price.regular_price' | t }}
+                                  </span>
+                                  <s class="cart-item__old-price price price--end">
+                                    {{ item.original_line_price | money }}
+                                  </s>
+                                  <span class="visually-hidden">
+                                    {{ 'products.product.price.sale_price' | t }}
+                                  </span>
+                                  <span class="price price--end">
+                                    {{ item.final_line_price | money }}
+                                  </span>
+                                </div>
+                              {%- else -%}
                                 <span class="price price--end">
-                                  {{ item.final_line_price | money }}
+                                  {{ item.original_line_price | money }}
                                 </span>
-                              </div>
-                            {%- else -%}
-                              <span class="price price--end">
-                                {{ item.original_line_price | money }}
-                              </span>
-                            {%- endif -%}
+                              {%- endif -%}
 
-                            {%- if item.variant.available and item.unit_price_measurement -%}
-                              {% render 'unit-price', price: item.unit_price, measurement: item.unit_price_measurement %}
-                            {%- endif -%}
-                          </div>
-                        </td>
+                              {%- if item.variant.available and item.unit_price_measurement -%}
+                                {% render 'unit-price', price: item.unit_price, measurement: item.unit_price_measurement %}
+                              {%- endif -%}
+                            </div>
+                          </td>
+                        {% endunless %}
                         {%- liquid
                           assign has_qty_rules = false
                           if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
@@ -331,6 +342,8 @@
                             assign has_vol_pricing = true
                           endif
                         -%}
+                        
+                        {% unless item.properties.isaddon %}              
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
                           role="cell"
@@ -405,6 +418,8 @@
                               <cart-remove-button
                                 id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
                                 data-index="{{ item.index | plus: 1 }}"
+                                data-value="{{ item.properties.addon }}"
+                                data-key="{{ item.key }}"
                               >
                                 <button
                                   type="button"
@@ -518,7 +533,33 @@
                             </div>
                           </quantity-popover>
                         </td>
+                         {% endunless %}
+                         <td class="addon-product-grid">
+                       {% for addon in items %}
+                        {% if addon.properties.addon == addon_group and addon.properties.isaddon == 'true' %}
+                           {% if addon.image %}
+                            {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
+                            <a href="{{ addon.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>
+                            <img
+                              class="cart-item__image"
+                              src="{{ addon.image | image_url: width: 300 }}"
+                              alt="{{ addon.image.alt | escape }}"
+                              loading="lazy"
+                              width="150"
+                              height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                            >
+                          {% endif %}
+                           <a href="{{ item.url }}" class="cart-item__name h4 break">
+                            {{- addon.product.title | escape -}}
+                          </a>
+                            <div class="product-option">
+                              {{ addon.original_price | money }}
+                            </div>
+                        {% endif %}
+                      {% endfor %}
+                         </td>
                       </tr>
+                      {% endunless %}
                     {%- endfor -%}
                   </tbody>
                 </table>

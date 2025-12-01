@@ -1,12 +1,51 @@
 class CartRemoveButton extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    this.addEventListener('click', this.handleClick.bind(this));
+  }
 
-    this.addEventListener('click', (event) => {
-      event.preventDefault();
-      const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
-      cartItems.updateQuantity(this.dataset.index, 0, event);
-    });
+  async handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
+    const groupId = this.dataset.value?.trim();
+
+    if (!groupId) {
+      cartItems.updateQuantity(this.dataset.index, 0, e);
+      return;
+    }
+
+    const button = this.querySelector('button') || this;
+    button.disabled = true;
+    button.style.opacity = '0.5';
+
+    try {
+      const cart = await fetch('/cart.js').then(r => r.json());
+
+      const keysToRemove = cart.items
+        .filter(item => item.properties?.addon === groupId)
+        .map(item => item.key);
+
+      if (keysToRemove.length === 0) {
+        cartItems.updateQuantity(this.dataset.index, 0, e);
+        return;
+      }
+
+      await fetch('/cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          updates: Object.fromEntries(keysToRemove.map(key => [key, 0]))
+        })
+      });
+      document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+      publish(PUB_SUB_EVENTS.cartUpdate, { source: 'grouped-remove' });
+
+    } catch (err) {
+      console.error(err);
+      button.disabled = false;
+      button.style.opacity = '1';
+    }
   }
 }
 

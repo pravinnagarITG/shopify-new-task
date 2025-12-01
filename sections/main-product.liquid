@@ -476,6 +476,26 @@
                   assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
                   render 'share-button', block: block, share_link: share_url
                 %}
+Required*
+                {% for addon in product.metafields.custom.addon_product.value %}
+                <div class="addon">
+                  <input type="radio" value="{{ addon.selected_or_first_available_variant.id }}" name="addonProduct">
+                 <label for="addonProduct">{{ addon.title }}</label>
+                </div>
+                {% endfor %}
+Optional
+              {% for addon in product.metafields.custom.optional_addon.value %}
+                <div class="addon">
+                {% if forloop.index == 1 %}
+                <input type="radio" value="" name="addonOptProduct" checked>
+                 <label for="addonOptProduct">None</label>
+                  {% endif %}
+                </div>
+                <div class="addon">
+                  <input type="radio" value="{{ addon.selected_or_first_available_variant.id }}" name="addonOptProduct">
+                 <label for="addonOptProduct">{{ addon.title }}</label>
+                </div>
+                {% endfor %}
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}

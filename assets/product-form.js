@@ -32,6 +32,24 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
+
+         const selectedAddon = document.querySelector('input[name="addonProduct"]:checked');
+         const selectedOptAddon = document.querySelector('input[name="addonOptProduct"]:checked');
+          if (selectedAddon && selectedAddon.value || selectedOptAddon) {
+            const addonGroupId = Math.floor(Math.random() * 1000000000);
+            formData.append('properties[addon]', addonGroupId);
+             formData.append('items[1][id]', selectedAddon.value);
+             formData.append('items[1][quantity]', 1);
+             formData.append('items[1][properties[addon]]', addonGroupId);
+             formData.append('items[1][properties[isaddon]]', 'true');
+             if(selectedOptAddon.value != ''){
+             formData.append('items[2][id]', selectedOptAddon.value);
+             formData.append('items[2][quantity]', 1);
+             formData.append('items[2][properties[addon]]', addonGroupId);
+             formData.append('items[2][properties[isaddon]]', 'true');
+             }
+          }
+
         if (this.cart) {
           formData.append(
             'sections',
