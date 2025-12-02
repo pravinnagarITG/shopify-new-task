@@ -327,6 +327,22 @@
                           </facet-remove>
                         {%- endif -%}
                       </div>
+                    {% comment %} <div class="slider-container">
+                      <div class="range-wrapper">
+                        <input type="range" min="0" max="{{ filter.range_max | divided_by: 100.0 | round }}" value="0" id="left-slider">
+                        <input type="range" min="0" max="{{ filter.range_max | divided_by: 100.0 | round }}" value="{{ filter.range_max | divided_by: 100.0 | round }}" id="right-slider">
+                        <div class="value_price-range">
+                        <div class="left-value-main">
+                        <div class="value-display" id="left-value-cuu">{{ cart.currency.symbol }}</div>  
+                        <div class="value-display" id="left-value">0</div>
+                        </div>
+                        <div class="left-value-main">
+                        <div class="value-display" id="left-value-cuu">{{ cart.currency.symbol }}</div>  
+                        <div class="value-display" id="right-value">{{ cart.currency.symbol }}{{ filter.range_max | divided_by: 100.0 | round }}</div>
+                        </div>
+                      </div>
+                      </div>
+                    </div> {% endcomment %}
                       <price-range class="facets__price">
                         {% render 'price-facet', filter: filter, id_prefix: 'Filter-', filter_type: filter_type %}
                       </price-range>
@@ -692,7 +708,22 @@
                           <p class="mobile-facets__info">
                             {{ 'products.facets.max_price' | t: price: max_price_amount }}
                           </p>
-
+                           {% comment %} <div class="slider-container slider-container-mob">
+                          <div class="range-wrapper range-wrapper-mob">
+                            <input type="range" min="0" max="{{ filter.range_max | divided_by: 100.0 | round }}" value="0" id="left-slider-mob">
+                            <input type="range" min="0" max="{{ filter.range_max | divided_by: 100.0 | round }}" value="{{ filter.range_max | divided_by: 100.0 | round }}" id="right-slider-mob">
+                            <div class="value_price-range">
+                              <div class="left-value-main">
+                              <div class="value-display" id="left-value-cuu">{{ cart.currency.symbol }}</div>
+                              <div class="value-display" id="left-value-mob">0.00</div>
+                              </div>
+                              <div class="left-value-main">
+                              <div class="value-display" id="left-value-cuu">{{ cart.currency.symbol }}</div>
+                              <div class="value-display" id="right-value-mob">{{ filter.range_max | divided_by: 100.0 | round }}</div>
+                              </div>
+                            </div>
+                          </div>
+                          </div> {% endcomment %}
                           <price-range class="facets__price">
                             {% render 'price-facet', filter: filter, id_prefix: 'Mobile-Filter-' %}
                           </price-range>

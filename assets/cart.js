@@ -40,6 +40,17 @@ class CartRemoveButton extends HTMLElement {
       });
       document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
       publish(PUB_SUB_EVENTS.cartUpdate, { source: 'grouped-remove' });
+      fetch(window.location.href)
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newBubble = doc.querySelector('#cart-icon-bubble');
+        
+        if (newBubble) {
+          document.getElementById('cart-icon-bubble').replaceWith(newBubble);
+        }
+      });
 
     } catch (err) {
       console.error(err);

@@ -1255,3 +1255,62 @@ input.mobile-facets__checkbox {
     padding: 0 1rem 1rem;
   }
 }
+
+
+/* price filter*/
+
+.slider-container {
+    position: relative;
+    z-index: 1;
+}
+.slider-container .range-wrapper {
+    position: relative;
+    width: 100%;
+}
+.slider-container input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2px;
+    background: #0381c2;
+    border-radius:5px;
+    outline: none;
+    position: absolute;
+    top: 20px;
+    pointer-events: none;
+    margin-top: 10px;
+}
+.slider-container input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #0381c2;
+    cursor: pointer;
+    border-radius: 50%;
+    border:2px solid #0381c2;
+    position: relative;
+    z-index: 2;
+    margin-top: 0;
+    pointer-events: visible;
+  }
+.value_price-range {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom:10px;
+}
+.left-value-main {
+    display: flex;
+}
+
+.facets__price .div-mains .field span.currency_icon, .value_price-range .value-display {
+    font-size: 14px;
+    line-height: 1.4;
+}
+.facets__price .div-mains .field span.currency_icon, .value_price-range .value-display {
+    font-size: 14px;
+    line-height: 1.4;
+}
+.slider-container .value-display {
+    font-weight: 500;
+    color: #1b365d;
+}

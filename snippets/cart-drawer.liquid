@@ -537,24 +537,29 @@
                          <td class="addon-product-grid">
                        {% for addon in items %}
                         {% if addon.properties.addon == addon_group and addon.properties.isaddon == 'true' %}
-                           {% if addon.image %}
+                           <div class="addon-content">
+                          {% if addon.image %}
                             {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
-                            <a href="{{ addon.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>
+                            {% comment %} <a href="{{ addon.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a> {% endcomment %}
+                          
                             <img
                               class="cart-item__image"
                               src="{{ addon.image | image_url: width: 300 }}"
                               alt="{{ addon.image.alt | escape }}"
                               loading="lazy"
-                              width="150"
-                              height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                              width="100"
+                              height="{{ 100 | divided_by: item.image.aspect_ratio | ceil }}"
                             >
                           {% endif %}
+                          <div class="addon-prdct">
                            <a href="{{ item.url }}" class="cart-item__name h4 break">
                             {{- addon.product.title | escape -}}
                           </a>
                             <div class="product-option">
                               {{ addon.original_price | money }}
                             </div>
+                          </div>
+                          </div>
                         {% endif %}
                       {% endfor %}
                          </td>

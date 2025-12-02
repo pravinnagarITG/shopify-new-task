@@ -1,0 +1,780 @@
+
+<scrolling-banner id="section-id-{{ section.id }}" class="block marque-main-overlay">
+  {% style %}
+    .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  .marquee:hover .marquee-content {
+    animation-play-state: paused;
+  }
+  {% endstyle %}
+
+  {%- unless section.settings.full_width -%}<div class="container container--not-mobile">{%- endunless -%}
+
+  <div class="marquee-container color-{{ section.settings.color_scheme }} isolate gradient section-{{ section.id }}-padding">
+    <div class="marquee marquee--{{ section.settings.direction }}
+        {% if section.settings.font == 'heading' %} heading-font{% endif %}"
+        style="--duration: {{ 42 | minus: section.settings.speed }}s; --space: {{ section.settings.space }}px; --text-size: {{ section.settings.text_size }}px" role="marquee">
+      {%- capture scrolling_content -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'text' %}
+            {%- liquid
+              assign text = block.settings.text
+              if block.settings.stencil_all_text == false and block.settings.stencil_text != blank
+                assign words = block.settings.stencil_text | split: ","
+                for word in words
+                  assign trimmed_word = word | strip
+                  assign replacement_text = "{" | append: trimmed_word | append: "}"
+                  assign text = text | replace: trimmed_word, replacement_text
+                endfor
+
+                assign text = text | replace: "{", "<span class='marquee-stencil-this'>"
+                assign text = text | replace: "}", "</span>"
+              endif
+
+              if block.settings.link
+                assign contains_link = true
+              endif
+            -%}
+
+            <span class="marquee-item marquee-text{% if block.settings.stencil_all_text %} marquee-text--stencil{% endif %}" style="{% unless block.settings.color contains ',0)' %}--color: {{ block.settings.color }}{% endunless %}" {{ block.shopify_attributes }}>
+              {%- if block.settings.use_h1 -%}
+                <h1 class="marquee-item_h1">
+              {%- endif -%}
+              {%- if block.settings.link -%}
+                <a href="{{ block.settings.link }}">
+              {%- endif -%}
+              {{- text -}}
+              {%- if block.settings.link -%}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.use_h1 -%}
+                </h1>
+              {%- endif -%}
+            </span>
+
+          {%- elsif block.type == 'icon' %}
+            <span class="marquee-item marquee-icon" style="--width: {{ block.settings.icon_width }}px; {% unless block.settings.color contains ',0)' %}--color: {{ block.settings.color }}{% endunless %}" {{ block.shopify_attributes }}>
+            {% comment %}  
+            {%- render 'icon', icon: block.settings.icon -%}
+            {% endcomment %}
+            </span>
+
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {%- for i in (1..15) -%}
+        <span class="marquee-content{% if contains_link %} marquee-content--contains-link{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>
+          {%- if forloop.first -%}
+            {{ scrolling_content }}
+          {%- else -%}
+            {{ scrolling_content | replace: '<a ', '<a tabindex="-1" ' | replace: '<h1 class="marquee-item_h1">' , '<span>' | replace: '</h1>', '</span>' }}
+          {%- endif -%}
+        </span>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- unless section.settings.full_width -%}</div>{%- endunless -%}
+</scrolling-banner>
+ <script>
+    if (!customElements.get('scrolling-banner')) {
+    const ScrollingBanner = class extends HTMLElement {
+        constructor() {
+        super();
+        window.initLazyScript(this, this.init.bind(this));
+        }
+
+        init() {
+        // Transforms can confuse lazy loading in browsers, so we coordinate loading here
+        // Load all countdown timers
+        customElements.whenDefined('countdown-timer').then(() => {
+            this.querySelectorAll('countdown-timer').forEach((el) => el.init());
+        });
+
+        // Load all images
+        this.querySelectorAll('img[loading="lazy"]').forEach((el) => {
+            el.loading = 'eager';
+        });
+
+        // After fonts have loaded
+        document.fonts.ready.then(() => this.querySelector('.marquee').classList.add('marquee--animate'));
+        }
+    };
+
+    window.customElements.define('scrolling-banner', ScrollingBanner);
+    }
+ </script>
+{% schema %}
+{
+  "name": "Scrolling banner",
+  "class": "section-scrolling-banner",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "id": "full_width",
+      "type": "checkbox",
+      "label": "Full page width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Text size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 0.5,
+      "max": 40,
+      "step": 0.5,
+      "unit": "x",
+      "label": "Speed",
+      "default": 35
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        {
+          "label": "Left to right",
+          "value": "right"
+        },
+        {
+          "label": "Right to left",
+          "value": "left"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "space",
+      "min": 0,
+      "max": 140,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between items",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "html",
+          "id": "text",
+          "label": "Text",
+          "default": "Your scrolling text here"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "rgba(0,0,0,0)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_h1",
+          "label": "Set as primary page heading",
+          "info": "Use <h1> tag. One per page recommended. [Read more](https://cleancanvas.co.uk/support/symmetry/section-h1-setting)",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Stencil text"
+        },
+        {
+          "type": "paragraph",
+          "content": "Some or all of your text can appear as a stencil outline. Requires a flat section background color, no gradient."
+        },
+        {
+          "type": "checkbox",
+          "id": "stencil_all_text",
+          "label": "Stencil all text",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "stencil_text",
+          "label": "Text to stencil",
+          "info": "Case-sensitive. To stencil words that are not next to each other, use a comma. For example 'shipping, returns'"
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "star",
+          "options": [
+            {
+              "value": "accessible",
+              "label": "Accessible"
+            },
+            {
+              "value": "award",
+              "label": "Award"
+            },
+            {
+              "value": "beach",
+              "label": "Beach"
+            },
+            {
+              "value": "box",
+              "label": "Box"
+            },
+            {
+              "value": "briefcase",
+              "label": "Briefcase"
+            },
+            {
+              "value": "calendar",
+              "label": "Calendar"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "Chat bubble"
+            },
+            {
+              "value": "check_mark",
+              "label": "Check mark"
+            },
+            {
+              "value": "check_mark_in_circle",
+              "label": "Check mark in circle"
+            },
+            {
+              "value": "clock",
+              "label": "Clock"
+            },
+            {
+              "value": "credit_card",
+              "label": "Credit card"
+            },
+            {
+              "value": "dollar_sign",
+              "label": "Dollar sign"
+            },
+            {
+              "value": "dryer",
+              "label": "Dryer"
+            },
+            {
+              "value": "eye",
+              "label": "Eye"
+            },
+            {
+              "value": "feather",
+              "label": "Feather"
+            },
+            {
+              "value": "gift",
+              "label": "Gift"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            },
+            {
+              "value": "iron",
+              "label": "Iron"
+            },
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "leather",
+              "label": "Leather"
+            },
+            {
+              "value": "lock",
+              "label": "Lock"
+            },
+            {
+              "value": "map_pin",
+              "label": "Map pin"
+            },
+            {
+              "value": "pants",
+              "label": "Pants"
+            },
+            {
+              "value": "percent",
+              "label": "Percent"
+            },
+            {
+              "value": "plane",
+              "label": "Plane"
+            },
+            {
+              "value": "price_tag",
+              "label": "Price tag"
+            },
+            {
+              "value": "question_mark",
+              "label": "Question mark"
+            },
+            {
+              "value": "recycle",
+              "label": "Recycle"
+            },
+            {
+              "value": "return",
+              "label": "Return"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "scissors",
+              "label": "Scissors"
+            },
+            {
+              "value": "shirt",
+              "label": "Shirt"
+            },
+            {
+              "value": "shoe",
+              "label": "Shoe"
+            },
+            {
+              "value": "silhouette",
+              "label": "Silhouette"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "sun-high",
+              "label": "Sun"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "washing",
+              "label": "Washing"
+            },
+            {
+              "value": "world",
+              "label": "World"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "icon_width",
+          "min": 10,
+          "max": 200,
+          "step": 5,
+          "label": "Icon width",
+          "unit": "px",
+          "default": 50
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "rgba(0,0,0,0)"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 10,
+          "max": 400,
+          "step": 5,
+          "label": "Image width",
+          "unit": "px",
+          "default": 100
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Read more"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "default": "primary",
+          "options": [
+            {
+              "label": "Primary",
+              "value": "primary"
+            },
+            {
+              "label": "Secondary",
+              "value": "secondary"
+            },
+            {
+              "label": "Custom",
+              "value": "custom"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "color_bg",
+          "label": "Custom background color",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "color_text",
+          "label": "Custom text color",
+          "default": "#333"
+        }
+      ]
+    },
+    {
+      "type": "countdown",
+      "name": "Countdown timer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End date",
+          "info": "Required. Format: YYYY-MM-DD."
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "End time (optional)",
+          "info": "Format: 17:00 (24 hour clock). Uses the store's timezone."
+        },
+        {
+          "type": "richtext",
+          "id": "end_text",
+          "label": "End text",
+          "info": "This shows when the date and time elapses."
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_end",
+          "label": "Hide the timer when the date and time elapses",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "rgba(0,0,0,0)"
+        },
+        {
+          "type": "range",
+          "id": "number_size",
+          "min": 20,
+          "max": 120,
+          "step": 2,
+          "unit": "px",
+          "label": "Number size",
+          "default": 40
+        },
+        {
+          "type": "select",
+          "id": "divider_type",
+          "label": "Divider type",
+          "default": "colon",
+          "options": [
+            {
+              "value": "colon",
+              "label": "Colon"
+            },
+            {
+              "value": "dot",
+              "label": "Dot"
+            },
+            {
+              "value": "line",
+              "label": "Line"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_timer_labels",
+          "label": "Show labels",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling banner",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% style %}
+  .marquee-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  direction: ltr;
+}
+
+.marquee {
+  --scale: 0.7;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: max-content;
+  margin: 0;
+  padding-top: calc(var(--vertical-padding) * var(--scale));
+  padding-bottom: calc(var(--vertical-padding) * var(--scale));
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.marquee-content {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding-right: 0.2em;
+}
+[dir=rtl] .marquee-content {
+  direction: rtl;
+}
+
+.js .marquee:not(.marquee--animate) {
+  opacity: 1;
+}
+
+.marquee--animate .marquee-content {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.marquee:hover .marquee-content--contains-link {
+  animation-play-state: paused;
+}
+
+.marquee--right .marquee-content {
+  animation-direction: reverse;
+}
+
+.marquee-content .marquee-text--stencil,
+.marquee-content .marquee-stencil-this {
+  --stencil-shadow-offset-one-axis: 0.012em;
+  --stencil-shadow-offset-two-axes: 0.008em;
+  --shadow-color: var(--color, rgb(var(--text-color)));
+  color: transparent;
+  text-shadow: 0 0 rgb(var(--bg-color)), calc(-1 * var(--stencil-shadow-offset-one-axis)) 0 var(--shadow-color), var(--stencil-shadow-offset-one-axis) 0 var(--shadow-color), 0 calc(-1 * var(--stencil-shadow-offset-one-axis)) var(--shadow-color), 0 var(--stencil-shadow-offset-one-axis) var(--shadow-color), calc(-1 * var(--stencil-shadow-offset-two-axes)) calc(-1 * var(--stencil-shadow-offset-two-axes)) var(--shadow-color), calc(-1 * var(--stencil-shadow-offset-two-axes)) var(--stencil-shadow-offset-two-axes) var(--shadow-color), var(--stencil-shadow-offset-two-axes) calc(-1 * var(--stencil-shadow-offset-two-axes)) var(--shadow-color), var(--stencil-shadow-offset-two-axes) var(--stencil-shadow-offset-two-axes) var(--shadow-color);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+.marquee-item {
+  padding-right: calc(var(--space) * var(--scale));
+}
+.marquee-item a:not(.btn) {
+  color: inherit;
+}
+
+.marquee-item_h1 {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: normal;
+  line-height: inherit;
+  text-transform: inherit;
+}
+
+.marquee-text {
+    color: rgb(var(--color-foreground));
+    opacity: 1;
+    font-size:var(--text-size);
+}
+.marquee-text p{
+  margin:0;
+}
+.heading-font .marquee-text {
+  letter-spacing: var(--heading-font-letter-spacing);
+}
+
+.marquee-icon .icon {
+  display: block;
+  width: calc(var(--width) * var(--scale));
+  height: calc(var(--width) * var(--scale));
+  color: var(--color);
+}
+
+.marquee-image .placeholder-image,
+.marquee-image .theme-img {
+  display: block;
+  width: calc(var(--width) * var(--scale));
+}
+
+.marquee-button .btn--custom,
+.marquee-button .btn--custom:hover {
+  border: 0;
+  background: var(--btn-col-bg);
+  color: var(--btn-col-text);
+}
+
+@media (min-width: 768px) {
+  .marquee {
+    --scale: 0.85;
+  }
+}
+@media (min-width: 1000px) {
+  .marquee {
+    --scale: 1;
+  }
+}
+.marquee-container:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 8%;
+    background: #0381c2;
+    box-shadow: 1px 1px 60px 71px #0381c2;
+    z-index: 1;
+}
+.marque-main-overlay{
+  position:relative;
+}
+.marque-main-overlay:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 8%;
+    z-index: 1;
+    background: #0381c2;
+    box-shadow: 1px 1px 60px 71px #0381c2;
+    overflow: hidden;
+}
+.section-scrolling-banner{
+  overflow:hidden;
+}
+
+@media screen and (max-width: 767px){
+  .marquee-container:before {
+    width: auto;
+    box-shadow: 1px 1px 60px 30px #0381c2;
+  }
+  .marque-main-overlay:after{
+    width: auto;
+    box-shadow: 1px 1px 60px 25px #0381c2;
+  }
+}
+{% endstyle %}

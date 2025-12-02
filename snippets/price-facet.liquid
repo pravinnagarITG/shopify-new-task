@@ -42,4 +42,196 @@
   <label class="field__label" for="{{ id_prefix }}{{ filter.label | escape }}-LTE">
     {{- 'products.facets.to' | t -}}
   </label>
+</div> 
+{% comment %}<span class="field-currency">{{ cart.currency.symbol }}</span{% endcomment %}
+
+
+ {% comment %} 
+<div class="div-mains hidden">
+<div class="field">
+  <span class="currency_icon">{{ cart.currency.symbol }}</span>
+  <input
+    class="field__input"
+    name="{{ filter.min_value.param_name }}"
+    id="{{ id_prefix }}{{ filter.label | escape }}-GTE"
+    {%- if filter.min_value.value -%}
+      value="{{ filter.min_value.value | money_without_currency }}"
+    {%- endif -%}
+    type="text"
+    inputmode="decimal"
+    placeholder="0"
+    data-pattern="\d| |,|\."
+    data-min="0"
+    data-max="{{ filter.range_max | money_without_currency }}"
+  >
+  <label class="field__label" for="{{ id_prefix }}{{ filter.label | escape }}-GTE">
+    {% comment %} {{- 'products.facets.from' | t -}} {% endcomment %}
+    0
+  </label>
 </div>
+{% comment %}
+{%- if filter_type != 'vertical' -%}
+  <span class="field-currency">{{ cart.currency.symbol }}</span>
+{%- endif -%}
+ {% endcomment %}
+
+<div class="field">
+  <span class="currency_icon">{{ cart.currency.symbol }}</span>
+  <input
+    class="field__input"
+    name="{{ filter.max_value.param_name }}"
+    id="{{ id_prefix }}{{ filter.label | escape }}-LTE"
+    {%- if filter.max_value.value -%}
+      value="{{ filter.max_value.value | money_without_currency }}"
+    {%- endif -%}
+    type="text"
+    inputmode="decimal"
+    placeholder="{{ filter.range_max | money_without_currency }}"
+    data-pattern="\d| |,|\."
+    data-min="0"
+    data-max="{{ filter.range_max | money_without_currency }}"
+  >
+  <label class="field__label" for="{{ id_prefix }}{{ filter.label | escape }}-LTE">
+    {% comment %}{{- 'products.facets.to' | t -}}{% endcomment %}
+     {{ filter.range_max | money_without_currency }}
+  </label>
+</div>
+</div>
+
+<script>
+   (function() {
+  const storageLeft = 'FilterPriceLeft';
+  const storageRight = 'FilterPriceRight';
+ 
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+ 
+  function initializeSliders({ mobile = false, observer = null } = {}) {
+    const prefix = mobile ? '-mob' : '';
+    const leftSlider = document.getElementById(`left-slider${prefix}`);
+    const rightSlider = document.getElementById(`right-slider${prefix}`);
+    const leftValue = document.getElementById(`left-value${prefix}`);
+    const rightValue = document.getElementById(`right-value${prefix}`);
+    const leftInput = document.getElementById(mobile ? 'Mobile-Filter-Price-GTE' : 'Filter-Price-GTE');
+    const rightInput = document.getElementById(mobile ? 'Mobile-Filter-Price-LTE' : 'Filter-Price-LTE');
+    if (!leftSlider || !rightSlider || !leftValue || !rightValue || !leftInput || !rightInput) return;
+    if (observer) observer.disconnect();
+ 
+    // Always min = 0, max = collection max
+    const collectionMax = parseInt(rightSlider.getAttribute('max')) || parseInt(rightSlider.max);
+ 
+    // Initial values from localStorage or defaults
+    const leftStored = localStorage.getItem(storageLeft);
+    const rightStored = localStorage.getItem(storageRight);
+ 
+    leftSlider.min = 0;
+    leftSlider.value = leftInput.value = leftStored !== null ? parseInt(leftStored) : 0;
+ 
+    rightSlider.max = collectionMax;
+    rightSlider.value = rightInput.value = rightStored !== null ? parseInt(rightStored) : collectionMax;
+ 
+    function updateValues(fromSlider = true) {
+      const lVal = parseInt(leftSlider.value);
+      const rVal = parseInt(rightSlider.value);
+      leftValue.textContent = lVal;
+      rightValue.textContent = rVal;
+      if (fromSlider) {
+        leftInput.value = lVal;
+        rightInput.value = rVal;
+        localStorage.setItem(storageLeft, lVal);
+        localStorage.setItem(storageRight, rVal);
+      }
+    }
+ 
+    function constrainSliders() {
+      leftSlider.value = Math.min(leftSlider.value, rightSlider.value - 1);
+      rightSlider.value = Math.max(rightSlider.value, parseInt(leftSlider.value) + 1);
+    }
+ 
+    leftSlider.oninput = rightSlider.oninput = leftInput.oninput = rightInput.oninput = null;
+ 
+    leftSlider.addEventListener('input', () => { constrainSliders(); updateValues(true); });
+    rightSlider.addEventListener('input', () => { constrainSliders(); updateValues(true); });
+ 
+    leftInput.addEventListener('input', () => {
+      let val = parseInt(leftInput.value);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val >= parseInt(rightSlider.value)) val = parseInt(rightSlider.value) - 1;
+      leftSlider.value = val;
+      updateValues(false);
+      localStorage.setItem(storageLeft, val);
+    });
+ 
+    rightInput.addEventListener('input', () => {
+      let val = parseInt(rightInput.value);
+      if (isNaN(val) || val > collectionMax) val = collectionMax;
+      if (val <= parseInt(leftSlider.value)) val = parseInt(leftSlider.value) + 1;
+      rightSlider.value = val;
+      updateValues(false);
+      localStorage.setItem(storageRight, val);
+    });
+ 
+    updateValues(false);
+ 
+    if (observer) observer.observe(document.body, { childList: true, subtree: true });
+  }
+ 
+  document.addEventListener('click', (e) => {
+    const removeButton = e.target.closest('a.price-filters, .remove-all');
+    if (!removeButton) return;
+ 
+    localStorage.removeItem(storageLeft);
+    localStorage.removeItem(storageRight);
+ 
+    const ids = [
+      ['left-slider', 'Filter-Price-GTE', 'left-value'],
+      ['right-slider', 'Filter-Price-LTE', 'right-value'],
+      ['left-slider-mob', 'Mobile-Filter-Price-GTE', 'left-value-mob'],
+      ['right-slider-mob', 'Mobile-Filter-Price-LTE', 'right-value-mob']
+    ];
+ 
+    ids.forEach(([s, i, v]) => {
+      const slider = document.getElementById(s);
+      const input = document.getElementById(i);
+      const value = document.getElementById(v);
+      if (slider && input && value) {
+        const maxVal = parseInt(slider.getAttribute('max')) || parseInt(slider.max);
+        slider.value = input.value = value.textContent = s.includes('left') ? 0 : maxVal;
+      }
+    });
+  });
+ 
+  const observer = new MutationObserver(debounce((mutations) => {
+    const relevantIds = [
+      'left-slider', 'right-slider', 'left-value', 'right-value',
+      'Filter-Price-GTE', 'Filter-Price-LTE',
+      'left-slider-mob', 'right-slider-mob', 'left-value-mob', 'right-value-mob',
+      'Mobile-Filter-Price-GTE', 'Mobile-Filter-Price-LTE'
+    ];
+    const hasRelevantChanges = mutations.some(mutation =>
+      Array.from(mutation.addedNodes).some(node =>
+        node.nodeType === 1 && (relevantIds.includes(node.id) || node.querySelector?.(relevantIds.map(id => `#${id}`).join(', ')))
+      )
+    );
+    if (hasRelevantChanges) runSliders();
+  }, 100));
+ 
+  function runSliders() {
+    if (window.innerWidth <= 750) {
+      initializeSliders({ mobile: true, observer });
+    } else {
+      initializeSliders({ mobile: false, observer });
+    }
+  }
+ 
+  window.addEventListener('DOMContentLoaded', runSliders);
+  window.addEventListener('resize', debounce(runSliders, 100));
+ 
+})();
+</script> 
+>{% endcomment %}

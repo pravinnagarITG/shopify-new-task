@@ -416,3 +416,16 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 .addon-product-grid {
     grid-column: 2 / 5;
 }
+.cart-drawer .addon-product-grid .cart-item__image {
+    width: 80px;
+    height: 80px;
+}
+.addon-product-grid .addon-content {
+    display: flex;
+    gap: 10px;
+}
+.cart-drawer .addon-product-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
